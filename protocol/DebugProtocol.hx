@@ -1,4 +1,3 @@
-'use strict';
 package DebugProtocol;
 
 abstract MessageType(String) from String
@@ -310,475 +309,509 @@ typedef ErrorResponse = Response<{
 	@:optional var error: Message;
 }>;
 
-/*
-typedef InitializeRequest extends Request {
-    public var arguments:InitializeRequestArguments;
-}
+/** 
+    Initialize request; value of command field is "initialize".
+*/
+typedef InitializeRequest = Request<InitializeRequestArguments>;
 
 typedef InitializeRequestArguments {
-    public var adapterID:String;
-    public var linesStartAt1?:Bool;
-    public var columnsStartAt1?:Bool;
-    public var pathFormat?:String;
-    public var supportsVariableType?:Bool;
-    public var supportsVariablePaging?:Bool;
-    public var supportsRunInTerminalRequest?:Bool;
-}
+    /** 
+    The ID of the debugger adapter. Used to select or verify debugger adapter. 
+    **/
+    var adapterID:String;
+
+    /** 
+    If true all line numbers are 1-based (default). 
+    **/
+    @:optional var linesStartAt1:Bool;
+
+    /** 
+    If true all column numbers are 1-based (default). 
+    **/
+    @:optional var columnsStartAt1:Bool;
+
+    /** 
+    Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. 
+    **/
+    @:optional var pathFormat:String;
+
+    /** 
+    Client supports the optional type attribute for variables. 
+    **/
+    @:optional var supportsVariableType:Bool;
+
+    /** 
+    Client supports the paging of variables. 
+    **/
+    @:optional var supportsVariablePaging:Bool;
+
+    /** 
+    Client supports the runInTerminal request. 
+    **/
+    @:optional var supportsRunInTerminalRequest:Bool;
+}
+
+/** 
+    Response to Initialize request. 
+**/
+typedef InitializeResponse = Response<Capabilites>;
+
+/** 
+    ConfigurationDone request; value of command field is "configurationDone".
+	The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent)
+*/
+typedef ConfigurationDoneRequest = Request<ConfigurationDoneArguments>;
+
+/** 
+    Arguments for "configurationDone" request. 
+**/
+typedef ConfigurationDoneArguments = {
+    /* The configurationDone request has no standardized attributes. */
+};
+
+/** 
+ Response to "configurationDone" request. This is just an acknowledgement, so no body field is required. 
+**/
+typedef ConfigurationDoneResponse = Response<{}>;
 
-typedef InitializeResponse extends Response {
-    public var body?:Capabilites;
-}
+/** 
+    Launch request; value of command field is "launch".
+*/
+typedef LaunchRequest = Request<LaunchRequestArguments>;
 
-typedef ConfigurationDoneRequest extends Request {
-    public var arguments?:ConfigurationDoneArguments;
-}
+/** 
+    Arguments for "launch" request. 
+*/
+typedef LaunchRequestArguments = {
+    /* 
+    If noDebug is true the launch request should launch the program without enabling debugging. 
+    */
+    @:optional var noDebug:Bool;
+};
 
-typedef ConfigurationDoneArguments {
-}
+/** 
+    Response to "launch" request. This is just an acknowledgement, so no body field is required. 
+*/
+typedef LaunchResponse = Response<{}>;
 
-typedef ConfigurationDoneResponse extends Response {
-}
+typedef AttachRequest = Request<AttachRequestArguments>;
 
-typedef LaunchRequest extends Request {
-    public var arguments:LaunchRequestArguments;
-}
+typedef AttachRequestArguments = {};
 
-typedef LaunchRequestArguments {
-    public var noDebug?:Bool;
-}
+typedef AttachResponse = Response<{}>;
 
-typedef LaunchResponse extends Response {
-}
+typedef DisconnectRequest = Request<{DisconnectArguments}>;
 
-typedef AttachRequest extends Request {
-    public var arguments:AttachRequestArguments;
-}
+typedef DisconnectArguments = {};
 
-typedef AttachRequestArguments {
-}
+typedef DisconnectResponse = Response <{}>;
 
-typedef AttachResponse extends Response {
-}
+typedef SetBreakpointsRequest = Request<{SetBreakpointsArguments}>;
 
-typedef DisconnectRequest extends Request {
-    public var arguments?:DisconnectArguments;
-}
+/** 
+    Arguments for "setBreakpoints" request. 
+**/
+typedef SetBreakpointsArguments = {
+    /** 
+        The source location of the breakpoints; either source.path or source.reference must be specified. 
+    **/
+    var source:Source;
 
-typedef DisconnectArguments {
-}
+    /** 
+        The code locations of the breakpoints. 
+    **/
+    @:optional var breakpoints:Array<SourceBreakpoint>;
 
-typedef DisconnectResponse extends Response {
-}
+    /** 
+        Deprecated: The code locations of the breakpoints. 
+    */
+    @:optional var lines:Array<Int>;
 
-typedef SetBreakpointsRequest extends Request {
-    public var arguments:SetBreakpointsArguments;
+    /** 
+        A value of true indicates that the underlying source has been modified which results in new breakpoint locations. 
+    */
+    @:optional var sourceModified:Bool;
 }
 
-typedef SetBreakpointsArguments {
-    public var source:Source;
-    public var breakpoints?:Dynamic;
-    public var lines?:Dynamic;
-    public var sourceModified?:Bool;
-}
+/** Response to "setBreakpoints" request.
+		Returned is information about each breakpoint created by this request.
+		This includes the actual code location and whether the breakpoint could be verified.
+		The breakpoints returned are in the same order as the elements of the 'breakpoints'
+		(or the deprecated 'lines') in the SetBreakpointsArguments.
+*/
+typedef SetBreakpointsResponse = Response<Array<Breakpoint>>;
 
-typedef SetBreakpointsResponse extends Response {
-    public var body:Dynamic;
-}
+typedef SetFunctionBreakpointsRequest = Request<{SetFunctionBreakpointsArguments}>;
 
-typedef SetFunctionBreakpointsRequest extends Request {
-    public var arguments:SetFunctionBreakpointsArguments;
-}
+typedef SetFunctionBreakpointsArguments = {
+    var breakpoints:Array<FunctionBreakpoint>;
+};
 
-typedef SetFunctionBreakpointsArguments {
-    public var breakpoints:Dynamic;
-}
+typedef SetFunctionBreakpointsResponse = Response<{
+    var breakpoints:Array<Breakpoint>
+}>;
 
-typedef SetFunctionBreakpointsResponse extends Response {
-    public var body:Dynamic;
-}
+typedef SetExceptionBreakpointsRequest = Request<{SetExceptionBreakpointsArguments}>;
 
-typedef SetExceptionBreakpointsRequest extends Request {
-    public var arguments:SetExceptionBreakpointsArguments;
-}
 
-typedef SetExceptionBreakpointsArguments {
-    public var filters:Dynamic;
-}
+typedef SetExceptionBreakpointsArguments = {
+    var filters:Array<String>;
+};
 
-typedef SetExceptionBreakpointsResponse extends Response {
-}
+typedef SetExceptionBreakpointsResponse = Response<{}>;
 
-typedef ContinueRequest extends Request {
-    public var arguments:ContinueArguments;
-}
+typedef ContinueRequest = Request<ContinueArguments>;
 
-typedef ContinueArguments {
-    public var threadId:Float;
+typedef ContinueArguments = {
+    var threadId:Int;
 }
 
-typedef ContinueResponse extends Response {
-    public var body:Dynamic;
-}
+typedef ContinueResponse = Response<{
+    @:optional var allThreadsContinued:Bool;
+}>
 
-typedef NextRequest extends Request {
-    public var arguments:NextArguments;
-}
+typedef NextRequest = Request<NextArguments>;
 
-typedef NextArguments {
-    public var threadId:Float;
+typedef NextArguments = {
+    var threadId:Int;
 }
 
-typedef NextResponse extends Response {
-}
+typedef NextResponse = Response<{}>;
 
-typedef StepInRequest extends Request {
-    public var arguments:StepInArguments;
+typedef StepInRequest = Request<StepInArguments>;
 }
 
-typedef StepInArguments {
-    public var threadId:Float;
-    public var targetId?:Float;
+typedef StepInArguments = {
+    var threadId:Int;
+    @:optional var targetId:Int;
 }
 
-typedef StepInResponse extends Response {
-}
+typedef StepInResponse = Response<{}>;
 
-typedef StepOutRequest extends Request {
-    public var arguments:StepOutArguments;
-}
+typedef StepOutRequest = Request<StepOutArguments>;
 
-typedef StepOutArguments {
-    public var threadId:Float;
+typedef StepOutArguments = {
+    var threadId:Int;
 }
 
-typedef StepOutResponse extends Response {
-}
+typedef StepOutResponse = Response<{}>;
 
-typedef StepBackRequest extends Request {
-    public var arguments:StepBackArguments;
+typedef StepBackRequest = Request<StepBackArguments>;
 }
 
-typedef StepBackArguments {
-    public var threadId:Float;
+typedef StepBackArguments = {
+    var threadId:Int;
 }
 
-typedef StepBackResponse extends Response {
-}
+typedef StepBackResponse = Response<{}>;
 
-typedef RestartFrameRequest extends Request {
-    public var arguments:RestartFrameArguments;
+typedef RestartFrameRequest = Request<RestartFrameArguments>;
 }
 
-typedef RestartFrameArguments {
-    public var frameId:Float;
+typedef RestartFrameArguments = {
+    var frameId:Int;
 }
 
-typedef RestartFrameResponse extends Response {
-}
+typedef RestartFrameResponse = Response<{}>;
 
-typedef GotoRequest extends Request {
-    public var arguments:GotoArguments;
-}
+typedef GotoRequest = Request<GotoArguments>;
 
-typedef GotoArguments {
-    public var threadId:Float;
-    public var targetId:Float;
+typedef GotoArguments = {
+    var threadId:Int;
+    var targetId:Int;
 }
 
-typedef GotoResponse extends Response {
-}
+typedef GotoResponse = Response<{}>;
 
-typedef PauseRequest extends Request {
-    public var arguments:PauseArguments;
+typedef PauseRequest = Request<PauseArguments>;
 }
 
-typedef PauseArguments {
-    public var threadId:Float;
+typedef PauseArguments = {
+    var threadId:Int;
 }
 
-typedef PauseResponse extends Response {
-}
+typedef PauseResponse = Response<{}>;
 
-typedef StackTraceRequest extends Request {
-    public var arguments:StackTraceArguments;
+typedef StackTraceRequest = Request<StackTraceArguments>;
 }
 
-typedef StackTraceArguments {
-    public var threadId:Float;
-    public var startFrame?:Float;
-    public var levels?:Float;
+typedef StackTraceArguments = {
+    var threadId:Int;
+    @:optional var startFrame:Int;
+    @:optional var levels:Int;
 }
 
-typedef StackTraceResponse extends Response {
-    public var body:Dynamic;
-}
+typedef StackTraceResponse = Response<{
+    var stackFrames: Array<StackFrame>;
+	/** The total number of frames available. */
+    @:optional var totalFrames: Int;
+}>;
 
-typedef ScopesRequest extends Request {
-    public var arguments:ScopesArguments;
-}
+typedef ScopesRequest = Request<ScopesArguments>;
 
-typedef ScopesArguments {
-    public var frameId:Float;
+typedef ScopesArguments = {
+    var frameId:Float;
 }
 
-typedef ScopesResponse extends Response {
-    public var body:Dynamic;
-}
+typedef ScopesResponse = Response<{
+    var scopes:Array<Scope>;
+}>;
 
-typedef VariablesRequest extends Request {
-    public var arguments:VariablesArguments;
-}
+typedef VariablesRequest = Request<VariablesArguments>;
 
-typedef VariablesArguments {
-    public var variablesReference:Float;
-    public var filter?:Dynamic;
-    public var null;
-    public var "named";
-    public var start?:Float;
-    public var count?:Float;
+@:enum
+abstract VariableArgumentsFilter(String)
+{
+    var INDEXED = "indexed";
+    var NAMED   = "named";
 }
 
-typedef VariablesResponse extends Response {
-    public var body:Dynamic;
+typedef VariablesArguments = {
+    var variablesReference:Int;
+    @:optional var filter:VariableArgumentsFilter;
+    @:optional var start:Int;
+    @:optional var count:Int;
 }
 
-typedef SetVariableRequest extends Request {
-    public var arguments:SetVariableArguments;
-}
+typedef VariablesResponse = Response<{
+    var variables Array<Variable>
+}>;
 
-typedef SetVariableArguments {
-    public var variablesReference:Float;
-    public var name:String;
-    public var value:String;
+typedef SetVariableRequest = Request<SetVariableArguments>;
 }
 
-typedef SetVariableResponse extends Response {
-    public var body:Dynamic;
+typedef SetVariableArguments = {
+    var variablesReference:Int;
+    var name:String;
+    var value:String;
 }
 
-typedef SourceRequest extends Request {
-    public var arguments:SourceArguments;
-}
+typedef SetVariableResponse = Response<{
+    var value:String;
+}>;
 
-typedef SourceArguments {
-    public var sourceReference:Float;
-}
+typedef SourceRequest = Request<SourceArguments>;
 
-typedef SourceResponse extends Response {
-    public var body:Dynamic;
+typedef SourceArguments = {
+    var sourceReference:Float;
 }
 
-typedef ThreadsRequest extends Request {
-}
+typedef SourceResponse = Response<{
+    var content:String;
+    @:optional var mimeType:String;
+}>;
 
-typedef ThreadsResponse extends Response {
-    public var body:Dynamic;
-}
+typedef ThreadsRequest = Request<{}>;
 
-typedef ModulesRequest extends Request {
-    public var arguments:ModulesArguments;
-}
+typedef ThreadsResponse = Response<{
+    var threads:Array<Thread>;
+}>;
 
-typedef ModulesArguments {
-    public var startModule?:Float;
-    public var moduleCount?:Float;
-}
+typedef ModulesRequest = Request<ModulesArguments>;
 
-typedef ModulesResponse extends Response {
-    public var body:Dynamic;
+typedef ModulesArguments = {
+    @:optional var startModule:Int;
+    @:optional var moduleCount:Int;
 }
 
-typedef EvaluateRequest extends Request {
-    public var arguments:EvaluateArguments;
-}
+typedef ModulesResponse = Response<{
+    var modules:Array<Module>;
+    var totalModules:Int;
+}>;
 
-typedef EvaluateArguments {
-    public var expression:String;
-    public var frameId?:Float;
-    public var context?:String;
-}
+typedef EvaluateRequest = Request<EvaluateArguments>;
 
-typedef EvaluateResponse extends Response {
-    public var body:Dynamic;
+typedef EvaluateArguments = {
+    var expression:String;
+    @:optional var frameId:Int;
+    @:optional var context:String;
 }
 
-typedef StepInTargetsRequest extends Request {
-    public var arguments:StepInTargetsArguments;
+typedef EvaluateResponse = Response< {
+    /** The result of the evaluate request. */
+    var result: String;
+    /** The optional type of the evaluate result. */
+    @:optional var type: String;
+    /** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
+    var variablesReference: Int;
+    /** The number of named child variables.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+    @:optional var namedVariables: Int;
+    /** The number of indexed child variables.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+    @:optional var indexedVariables: Int;
 }
 
-typedef StepInTargetsArguments {
-    public var frameId:Float;
-}
+typedef StepInTargetsRequest = Request <StepInTargetsArguments>;
 
-typedef StepInTargetsResponse extends Response {
-    public var body:Dynamic;
+typedef StepInTargetsArguments = {
+    var frameId:Int;
 }
 
-typedef GotoTargetsRequest extends Request {
-    public var arguments:GotoTargetsArguments;
-}
+typedef StepInTargetsResponse = Response< {
+    var targets: Array<StepInTarget>;
+}>
 
-typedef GotoTargetsArguments {
-    public var source:Source;
-    public var line:Float;
-    public var column?:Float;
-}
+typedef GotoTargetsRequest = Request<GotoTargetsArguments>;
 
-typedef GotoTargetsResponse extends Response {
-    public var body:Dynamic;
+typedef GotoTargetsArguments = {
+    var source:Source;
+    var line:Int;
+    @:optional var column:Int;
 }
 
-typedef CompletionsRequest extends Request {
-    public var arguments:CompletionsArguments;
-}
+typedef GotoTargetsResponse = Response<{
+    var targets:Array<GotoTarget>;
+}>;
 
-typedef CompletionsArguments {
-    public var frameId?:Float;
-    public var text:String;
-    public var column:Float;
-    public var line?:Float;
-}
+typedef CompletionsRequest = <CompletionsArguments>;
 
-typedef CompletionsResponse extends Response {
-    public var body:Dynamic;
+typedef CompletionsArguments = {
+    @:optional var frameId:Int;
+    var text:String;
+    var column:Int;
+    @:optional var line:Int;
 }
 
-typedef CompletionItem {
-    public var label:String;
-    public var text?:String;
-    public var start?:Float;
-    public var length?:Float;
-}
+typedef CompletionsResponse = Response<{
+    /** The possible completions for . */
+	var targets:Array<CompletionItem>;
+}>;
+
+typedef CompletionItem = {
+    var label:String;
+    @:optional var text:String;
+    @:optional var start:Int;
+    @:optional var length:Int;
+};
 
-typedef Capabilites {
-    public var supportsConfigurationDoneRequest?:Bool;
-    public var supportsFunctionBreakpoints?:Bool;
-    public var supportsConditionalBreakpoints?:Bool;
-    public var supportsEvaluateForHovers?:Bool;
-    public var exceptionBreakpointFilters?:Dynamic;
-    public var supportsStepBack?:Bool;
-    public var supportsSetVariable?:Bool;
-    public var supportsRestartFrame?:Bool;
-    public var supportsGotoTargetsRequest?:Bool;
-    public var supportsStepInTargetsRequest?:Bool;
-    public var supportsCompletionsRequest?:Bool;
+typedef Capabilites = {
+    @:optional var supportsConfigurationDoneRequest:Bool;
+    @:optional var supportsFunctionBreakpoints:Bool;
+    @:optional var supportsConditionalBreakpoints:Bool;
+    @:optional var supportsEvaluateForHovers:Bool;
+    @:optional var exceptionBreakpointFilters:Array<ExceptionBreakpointsFilter>;
+    @:optional var supportsStepBack:Bool;
+    @:optional var supportsSetVariable:Bool;
+    @:optional var supportsRestartFrame:Bool;
+    @:optional var supportsGotoTargetsRequest:Bool;
+    @:optional var supportsStepInTargetsRequest:Bool;
+    @:optional var supportsCompletionsRequest:Bool;
 }
 
-typedef ExceptionBreakpointsFilter {
-    public var filter:String;
-    public var label:String;
-    public var null?:Bool;
+typedef ExceptionBreakpointsFilter = {
+    var filter:String;
+    var label:String;
+    //@:optional var default:Bool;
 }
 
-typedef Message {
-    public var id:Float;
-    public var format:String;
-    public var variables?:Dynamic;
-    public var sendTelemetry?:Bool;
-    public var showUser?:Bool;
-    public var url?:String;
-    public var urlLabel?:String;
+typedef Message = {
+    var id:Int;
+    var format:String;
+    @:optional var variables:haxe.ds.DynamicAccess<String>;
+    @:optional var sendTelemetry:Bool;
+    @:optional var showUser:Bool;
+    @:optional var url:String;
+    @:optional var urlLabel:String;
 }
 
-typedef Module {
-    public var id:Dynamic;
-    public var null;
-    public var name:String;
-    public var path?:String;
-    public var isOptimized?:Bool;
-    public var isUserCode?:Bool;
-    public var version?:String;
-    public var symbolStatus?:String;
-    public var symbolFilePath?:String;
-    public var dateTimeStamp?:String;
-    public var addressRange?:String;
+typedef Module = {
+    var id:haxe.extern.Either<Int,String>;
+    var name:String;
+    @:optional var path:String;
+    @:optional var isOptimized:Bool;
+    @:optional var isUserCode:Bool;
+    @:optional var version:String;
+    @:optional var symbolStatus:String;
+    @:optional var symbolFilePath:String;
+    @:optional var dateTimeStamp:String;
+    @:optional var addressRange:String;
 }
 
-typedef ColumnDescriptor {
-    public var attributeName:String;
-    public var label:String;
-    public var format:String;
-    public var width:Float;
+typedef ColumnDescriptor = {
+    var attributeName:String;
+    var label:String;
+    var format:String;
+    var width:Int;
 }
 
-typedef ModulesViewDescriptor {
-    public var columns:Dynamic;
+typedef ModulesViewDescriptor = {
+    var columns:Array<ColumnDescriptor>;
 }
 
-typedef Thread {
-    public var id:Float;
-    public var name:String;
+typedef Thread = {
+    var id:Int;
+    var name:String;
 }
 
-typedef Source {
-    public var name?:String;
-    public var path?:String;
-    public var sourceReference?:Float;
-    public var origin?:String;
-    public var adapterData?:Dynamic;
+typedef Source = {
+    @:optional var name:String;
+    @:optional var path:String;
+    @:optional var sourceReference:Int;
+    @:optional var origin:String;
+    @:optional var adapterData:Dynamic;
 }
 
-typedef StackFrame {
-    public var id:Float;
-    public var name:String;
-    public var source?:Source;
-    public var line:Float;
-    public var column:Float;
-    public var endLine?:Float;
-    public var endColumn?:Float;
+typedef StackFrame = {
+    var id:Int;
+    var name:String;
+    @:optional var source:Source;
+    var line:Int;
+    var column:Int;
+    @:optional var endLine:Int;
+    @:optional var endColumn:Int;
 }
 
-typedef Scope {
-    public var name:String;
-    public var variablesReference:Float;
-    public var namedVariables?:Float;
-    public var indexedVariables?:Float;
-    public var expensive:Bool;
+typedef Scope = {
+    var name:String;
+    var variablesReference:Int;
+    @:optional var namedVariables:Int;
+    @:optional var indexedVariables:Int;
+    var expensive:Bool;
 }
 
 typedef Variable {
-    public var name:String;
-    public var type?:String;
-    public var value:String;
-    public var kind?:String;
-    public var variablesReference:Float;
-    public var namedVariables?:Float;
-    public var indexedVariables?:Float;
+    var name:String;
+    @:optional var type:String;
+    var value:String;
+    @:optional var kind:String;
+    var variablesReference:Int;
+    @:optional var namedVariables:Int;
+    @:optional var indexedVariables:Int;
 }
 
 typedef SourceBreakpoint {
-    public var line:Float;
-    public var column?:Float;
-    public var condition?:String;
+    var line:Int;
+    @:optional var column:Int;
+    @:optional var condition:String;
 }
 
 typedef FunctionBreakpoint {
-    public var name:String;
-    public var condition?:String;
+    var name:String;
+    @:optional var condition:String;
 }
 
 typedef Breakpoint {
-    public var id?:Float;
-    public var verified:Bool;
-    public var message?:String;
-    public var source?:Source;
-    public var line?:Float;
-    public var column?:Float;
-    public var endLine?:Float;
-    public var endColumn?:Float;
+    @:optional var id:Int;
+    var verified:Bool;
+    @:optional var message:String;
+    @:optional var source:Source;
+    @:optional var line:Int;
+    @:optional var column:Int;
+    @:optional var endLine:Int;
+    @:optional var endColumn:Int;
 }
 
 typedef StepInTarget {
-    public var id:Float;
-    public var label:String;
+    var id:Int;
+    var label:String;
 }
 
 typedef GotoTarget {
-    public var id:Float;
-    public var label:String;
-    public var line:Float;
-    public var column?:Float;
-    public var endLine?:Float;
-    public var endColumn?:Float;
+    var id:Int;
+    var label:String;
+    var line:Int;
+    @:optional var column:Int;
+    @:optional var endLine:Int;
+    @:optional var endColumn:Int;
 }
-*/
