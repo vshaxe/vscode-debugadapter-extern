@@ -1,6 +1,7 @@
 package test;
 import protocol.debug.Types;
 import adapter.DebugSession;
+import testSupport.DebugClient;
 
 class CustomAdapter extends adapter.DebugSession
 {
@@ -17,8 +18,6 @@ class CustomAdapter extends adapter.DebugSession
     {
         
         sendEvent(new InitializedEvent());
-        var b = new BreakpointEvent(BreakpointEventReason.CHANGED, new Breakpoint(true, 10, 10));
-        trace(b.body.reason);
 		// This debug adapter implements the configurationDoneRequest.
 		response.body.supportsConfigurationDoneRequest = true;
 
@@ -42,7 +41,7 @@ class TestAll
     public function new()
     {
         var ds = new CustomAdapter();
-        
+        var testClient = new DebugClient("", "", "node");
     }
 
     public static function main()
