@@ -24,8 +24,9 @@ addons:
   apt:
     packages:
       
+language: node_js
 node_js:
-  - "4.0.x"
+  - "4.1"
 
 install:
   # os-specific config
@@ -38,8 +39,12 @@ install:
       brew install phantomjs;
       brew install python3;
     fi
+  # check version
+  - node -v
+  
   # Install npm
   - npm install
+  
   # Install haxelibs
   - haxelib install -always build.hxml
   - haxelib list
