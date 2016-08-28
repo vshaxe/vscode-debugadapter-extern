@@ -24,7 +24,6 @@ addons:
   apt:
     packages:
       
-language: node_js
 node_js:
   - "4.1"
 
@@ -41,7 +40,7 @@ install:
     fi
   # check version
   - node -v
-  
+
   # Install npm
   - npm install
   
