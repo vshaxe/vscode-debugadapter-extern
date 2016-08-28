@@ -37,7 +37,7 @@ install:
       brew install python3;
     fi
   # Install haxelibs
-  - haxelib install
+  - haxelib install --yes
   - haxelib list
 
 script:
