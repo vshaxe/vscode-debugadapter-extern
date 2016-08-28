@@ -36,6 +36,8 @@ install:
       brew install phantomjs;
       brew install python3;
     fi
+  # Install npm
+  - npm install
   # Install haxelibs
   - haxelib install -always build.hxml
   - haxelib list
