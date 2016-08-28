@@ -1,5 +1,9 @@
-package DebugProtocol;
+package protocol.debug;
 
+@:native('protocol.DebugProtocol')
+typedef Types = {};
+
+@:enum
 abstract MessageType(String) from String
 {
     var TYPE_REQUEST  = "request";
@@ -142,12 +146,10 @@ typedef ContinuedEvent = Event<{
 	The event indicates that the debuggee has exited.
 **/
 typedef ExitedEvent = Event<{
-    {
     /** 
         The exit code returned from the debuggee. 
     **/
 	var exitCode: Int;
-	};
 }>;
 
 /** Event message for "terminated" event types.
@@ -160,6 +162,12 @@ typedef TerminatedEvent = Event<{
     @:optional var restart:Bool;
 }>;
 
+@:enum
+abstract ThreadEventReason(String)
+{
+    var STARTED = "started";
+    var exited  = "exited";
+}
 /** Event message for "thread" event type.
 	The event indicates that a thread has started or exited.
 **/
@@ -168,13 +176,22 @@ typedef ThreadEvent = Event<{
     /** 
         The reason for the event (such as: 'started', 'exited'). 
     **/
-	var reason: String;
+	var reason: ThreadEventReason;
 
 	/** 
         The identifier of the thread. 
     **/
 	var threadId: Int;
 }>;
+
+@:enum
+abstract OutputEventCategory(String)
+{
+    var CONSOLE = "console";
+    var STDOUT  = "stdout";
+    var STDERR  = "stderr";
+    var TELEMETRY = "telemetry";
+}
 
 /** Event message for "output" event type.
 	The event indicates that the target has produced output.
@@ -183,12 +200,12 @@ typedef OutputEvent = Event<{
     /** 
         The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. 
     **/
-	@:optional var category: String;
+	@:optional var category: OutputEventCategory;
 
 	/** 
         The output to report. 
     **/
-	var output: string;
+	var output: String;
 
 	/** 
         Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. 
@@ -284,7 +301,7 @@ typedef RunInTerminalRequestArguments = {
     /** 
         Environment key-value pairs that are added to the default environment. 
     **/
-    @:optional var env:haxe.ds.DynamicAccess<String>;
+    @:optional var env:haxe.DynamicAccess<String>;
 };
 
 /** 
@@ -314,7 +331,7 @@ typedef ErrorResponse = Response<{
 */
 typedef InitializeRequest = Request<InitializeRequestArguments>;
 
-typedef InitializeRequestArguments {
+typedef InitializeRequestArguments = {
     /** 
     The ID of the debugger adapter. Used to select or verify debugger adapter. 
     **/
@@ -400,13 +417,13 @@ typedef AttachRequestArguments = {};
 
 typedef AttachResponse = Response<{}>;
 
-typedef DisconnectRequest = Request<{DisconnectArguments}>;
+typedef DisconnectRequest = Request<DisconnectArguments>;
 
 typedef DisconnectArguments = {};
 
 typedef DisconnectResponse = Response <{}>;
 
-typedef SetBreakpointsRequest = Request<{SetBreakpointsArguments}>;
+typedef SetBreakpointsRequest = Request<SetBreakpointsArguments>;
 
 /** 
     Arguments for "setBreakpoints" request. 
@@ -441,17 +458,17 @@ typedef SetBreakpointsArguments = {
 */
 typedef SetBreakpointsResponse = Response<Array<Breakpoint>>;
 
-typedef SetFunctionBreakpointsRequest = Request<{SetFunctionBreakpointsArguments}>;
+typedef SetFunctionBreakpointsRequest = Request<SetFunctionBreakpointsArguments>;
 
 typedef SetFunctionBreakpointsArguments = {
     var breakpoints:Array<FunctionBreakpoint>;
 };
 
 typedef SetFunctionBreakpointsResponse = Response<{
-    var breakpoints:Array<Breakpoint>
+    var breakpoints:Array<Breakpoint>;
 }>;
 
-typedef SetExceptionBreakpointsRequest = Request<{SetExceptionBreakpointsArguments}>;
+typedef SetExceptionBreakpointsRequest = Request<SetExceptionBreakpointsArguments>;
 
 
 typedef SetExceptionBreakpointsArguments = {
@@ -479,7 +496,6 @@ typedef NextArguments = {
 typedef NextResponse = Response<{}>;
 
 typedef StepInRequest = Request<StepInArguments>;
-}
 
 typedef StepInArguments = {
     var threadId:Int;
@@ -497,7 +513,6 @@ typedef StepOutArguments = {
 typedef StepOutResponse = Response<{}>;
 
 typedef StepBackRequest = Request<StepBackArguments>;
-}
 
 typedef StepBackArguments = {
     var threadId:Int;
@@ -506,7 +521,6 @@ typedef StepBackArguments = {
 typedef StepBackResponse = Response<{}>;
 
 typedef RestartFrameRequest = Request<RestartFrameArguments>;
-}
 
 typedef RestartFrameArguments = {
     var frameId:Int;
@@ -524,7 +538,6 @@ typedef GotoArguments = {
 typedef GotoResponse = Response<{}>;
 
 typedef PauseRequest = Request<PauseArguments>;
-}
 
 typedef PauseArguments = {
     var threadId:Int;
@@ -533,7 +546,6 @@ typedef PauseArguments = {
 typedef PauseResponse = Response<{}>;
 
 typedef StackTraceRequest = Request<StackTraceArguments>;
-}
 
 typedef StackTraceArguments = {
     var threadId:Int;
@@ -574,11 +586,10 @@ typedef VariablesArguments = {
 }
 
 typedef VariablesResponse = Response<{
-    var variables Array<Variable>
+    var variables: Array<Variable>;
 }>;
 
 typedef SetVariableRequest = Request<SetVariableArguments>;
-}
 
 typedef SetVariableArguments = {
     var variablesReference:Int;
@@ -640,9 +651,9 @@ typedef EvaluateResponse = Response< {
     /** The number of indexed child variables.
         The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
     @:optional var indexedVariables: Int;
-}
+}>;
 
-typedef StepInTargetsRequest = Request <StepInTargetsArguments>;
+typedef StepInTargetsRequest = Request<StepInTargetsArguments>;
 
 typedef StepInTargetsArguments = {
     var frameId:Int;
@@ -664,7 +675,7 @@ typedef GotoTargetsResponse = Response<{
     var targets:Array<GotoTarget>;
 }>;
 
-typedef CompletionsRequest = <CompletionsArguments>;
+typedef CompletionsRequest = Request<CompletionsArguments>;
 
 typedef CompletionsArguments = {
     @:optional var frameId:Int;
@@ -708,7 +719,7 @@ typedef ExceptionBreakpointsFilter = {
 typedef Message = {
     var id:Int;
     var format:String;
-    @:optional var variables:haxe.ds.DynamicAccess<String>;
+    @:optional var variables:haxe.DynamicAccess<String>;
     @:optional var sendTelemetry:Bool;
     @:optional var showUser:Bool;
     @:optional var url:String;
@@ -716,7 +727,7 @@ typedef Message = {
 }
 
 typedef Module = {
-    var id:haxe.extern.Either<Int,String>;
+    var id:haxe.extern.EitherType<Int,String>;
     var name:String;
     @:optional var path:String;
     @:optional var isOptimized:Bool;
@@ -770,7 +781,7 @@ typedef Scope = {
     var expensive:Bool;
 }
 
-typedef Variable {
+typedef Variable = {
     var name:String;
     @:optional var type:String;
     var value:String;
@@ -780,18 +791,18 @@ typedef Variable {
     @:optional var indexedVariables:Int;
 }
 
-typedef SourceBreakpoint {
+typedef SourceBreakpoint = {
     var line:Int;
     @:optional var column:Int;
     @:optional var condition:String;
 }
 
-typedef FunctionBreakpoint {
+typedef FunctionBreakpoint = {
     var name:String;
     @:optional var condition:String;
 }
 
-typedef Breakpoint {
+typedef Breakpoint = {
     @:optional var id:Int;
     var verified:Bool;
     @:optional var message:String;
@@ -802,12 +813,12 @@ typedef Breakpoint {
     @:optional var endColumn:Int;
 }
 
-typedef StepInTarget {
+typedef StepInTarget = {
     var id:Int;
     var label:String;
 }
 
-typedef GotoTarget {
+typedef GotoTarget = {
     var id:Int;
     var label:String;
     var line:Int;

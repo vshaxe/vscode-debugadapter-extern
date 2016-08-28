@@ -1,0 +1,3 @@
+-main test.TestAll
+-js test.js
+-lib utest
