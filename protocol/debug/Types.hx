@@ -1,6 +1,5 @@
 package protocol.debug;
 
-@:native('protocol.DebugProtocol')
 typedef Types = {};
 
 @:enum
