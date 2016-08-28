@@ -1,5 +1,6 @@
 package testSupport;
 import protocol.debug.Types;
+import js.Promise;
 
 
 @:jsRequire("vscode-debugadapter-testsupport", "DebugClient")
@@ -78,7 +79,3 @@ extern class DebugClient
 
 }
 
-extern class Promise<T>
-{
-
-}
