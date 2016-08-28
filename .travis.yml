@@ -23,7 +23,9 @@ addons:
   # http://docs.travis-ci.com/user/apt/#Adding-APT-Packages
   apt:
     packages:
-      - node
+      
+node_js:
+  - "4.0.x"
 
 install:
   # os-specific config
