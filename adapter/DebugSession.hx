@@ -3,7 +3,7 @@ import protocol.debug.Types;
 
 @:jsRequire("vscode-debugadapter","DebugSession")
 extern class DebugSession extends ProtocolServer {
-    public static function run(debugSession:DebugSession):Void;
+    public static function run(debugSession:Class<DebugSession>):Void;
 
     public function new(?obsolete_debuggerLinesAndColumnsStartAt1:Bool, ?obsolete_isServer:Bool):Void;
     public function setDebuggerPathFormat(format:String):Void;
