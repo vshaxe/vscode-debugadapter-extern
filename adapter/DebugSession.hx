@@ -1,5 +1,6 @@
 package adapter;
 import protocol.debug.Types;
+import protocol.debug.Types.Source as TSource;
 
 @:jsRequire("vscode-debugadapter","DebugSession")
 extern class DebugSession extends ProtocolServer {
@@ -125,8 +126,14 @@ extern class Variable {
 
 @:jsRequire("vscode-debugadapter","Breakpoint")
 extern class Breakpoint {
+    @:optional public var id:Int;
     public var verified:Bool;
-
+    @:optional public var message:String;
+    @:optional public var source:TSource;
+    @:optional public var line:Int;
+    @:optional public var column:Int;
+    @:optional public var endLine:Int;
+    @:optional public var endColumn:Int;
     public function new (verified:Bool, ?line: Int, ?column: Int, ?source: Source);
 }
 
