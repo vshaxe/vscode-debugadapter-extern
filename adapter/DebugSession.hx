@@ -154,8 +154,14 @@ extern class CompletionItem {
     public function new (label: String, start: Int, length: Int = 0):Void;
 }
 
+@:publicFields
 @:jsRequire("vscode-debugadapter","StoppedEvent")
 extern class StoppedEvent extends Event<{var reason: String;@:optional var threadId: Int;@:optional var text: String;@:optional var allThreadsStopped: Bool;}> {
+    var reason: String;
+    @:optional var threadId: Int;
+    @:optional var text: String;
+    @:optional var allThreadsStopped: Bool;
+
     public function new(reason: String, threadId: Int, exception_text: String = null):Void;
 }
 
