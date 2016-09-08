@@ -455,7 +455,9 @@ typedef SetBreakpointsArguments = {
 		The breakpoints returned are in the same order as the elements of the 'breakpoints'
 		(or the deprecated 'lines') in the SetBreakpointsArguments.
 */
-typedef SetBreakpointsResponse = Response<Array<Breakpoint>>;
+typedef SetBreakpointsResponse = Response<{
+    var breakpoints:Array<Breakpoint>;
+}>;
 
 typedef SetFunctionBreakpointsRequest = Request<SetFunctionBreakpointsArguments>;
 
