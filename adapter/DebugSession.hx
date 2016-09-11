@@ -91,6 +91,8 @@ extern class Source
 extern class Scope {
     public var name: String;
     public var variablesReference: Int;
+    @:optional public var namedVariables:Int;
+    @:optional public var indexedVariables:Int;
     public var expensive: Bool;
 
     public function new(name: String, reference: Int, expensive: Bool = false):Void;
@@ -99,7 +101,7 @@ extern class Scope {
 @:jsRequire("vscode-debugadapter","StackFrame")
 extern class StackFrame  {
     public var pid: Int;
-    public var source: Source;
+    @:optional public var source: Source;
     public var line: Int;
     public var column: Int;
     public var name: String;

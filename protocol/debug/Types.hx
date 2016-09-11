@@ -563,7 +563,7 @@ typedef StackTraceResponse = Response<{
 typedef ScopesRequest = Request<ScopesArguments>;
 
 typedef ScopesArguments = {
-    var frameId:Float;
+    var frameId:Int;
 }
 
 typedef ScopesResponse = Response<{
