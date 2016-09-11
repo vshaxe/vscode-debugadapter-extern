@@ -102,7 +102,7 @@ typedef Response<T> = {
 **/
 typedef InitializedEvent = Event<Dynamic>;
 
-typedef StoppedEvent = Event<{
+typedef TStoppedEvent = {
     /** 
         The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI. 
     **/
@@ -123,14 +123,11 @@ typedef StoppedEvent = Event<{
     *   If the attribute is missing or false, only the thread with the given threadId can be expanded.
     **/
     @:optional var allThreadsStopped: Bool;
-}>;
+}
 
-/** Event message for "continued" event type.
-	The event indicates that the execution of the debuggee has continued.
-	Please note: a debug adapter is not expected to send this event in response to a request that implies that execution continues, e.g. 'launch' or 'continue'.
-	It is only necessary to send a ContinuedEvent if there was no previous request that implied this.
-**/
-typedef ContinuedEvent = Event<{
+typedef StoppedEvent = Event<TStoppedEvent>;
+
+typedef TContinuedEvent = {
     /** 
         The thread which was continued. 
     **/
@@ -139,7 +136,14 @@ typedef ContinuedEvent = Event<{
         If allThreadsContinued is true, a debug adapter can announce that all threads have continued. 
     **/
 	@:optional var allThreadsContinued: Bool;
-}>;
+};
+
+/** Event message for "continued" event type.
+	The event indicates that the execution of the debuggee has continued.
+	Please note: a debug adapter is not expected to send this event in response to a request that implies that execution continues, e.g. 'launch' or 'continue'.
+	It is only necessary to send a ContinuedEvent if there was no previous request that implied this.
+**/
+typedef ContinuedEvent = Event<TContinuedEvent>;
 
 /** Event message for "exited" event type.
 	The event indicates that the debuggee has exited.
@@ -151,27 +155,26 @@ typedef ExitedEvent = Event<{
 	var exitCode: Int;
 }>;
 
-/** Event message for "terminated" event types.
-	The event indicates that debugging of the debuggee has terminated.
-**/
-typedef TerminatedEvent = Event<{
+typedef TTerminatedEvent = {
     /** 
         A debug adapter may set 'restart' to true to request that the front end restarts the session. 
     **/
     @:optional var restart:Bool;
-}>;
+};
+
+/** Event message for "terminated" event types.
+	The event indicates that debugging of the debuggee has terminated.
+**/
+typedef TerminatedEvent = Event<TTerminatedEvent>;
 
 @:enum
 abstract ThreadEventReason(String)
 {
     var STARTED = "started";
-    var exited  = "exited";
+    var EXITED  = "exited";
 }
-/** Event message for "thread" event type.
-	The event indicates that a thread has started or exited.
-**/
-typedef ThreadEvent = Event<{
 
+typedef TThreadEvent = {
     /** 
         The reason for the event (such as: 'started', 'exited'). 
     **/
@@ -181,7 +184,12 @@ typedef ThreadEvent = Event<{
         The identifier of the thread. 
     **/
 	var threadId: Int;
-}>;
+}
+
+/** Event message for "thread" event type.
+	The event indicates that a thread has started or exited.
+**/
+typedef ThreadEvent = Event<TThreadEvent>;
 
 @:enum
 abstract OutputEventCategory(String)
@@ -192,10 +200,7 @@ abstract OutputEventCategory(String)
     var TELEMETRY = "telemetry";
 }
 
-/** Event message for "output" event type.
-	The event indicates that the target has produced output.
-**/
-typedef OutputEvent = Event<{
+typedef TOutputEvent = {
     /** 
         The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. 
     **/
@@ -210,7 +215,12 @@ typedef OutputEvent = Event<{
         Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. 
     **/
 	var data: Dynamic;
-}>;
+}
+
+/** Event message for "output" event type.
+	The event indicates that the target has produced output.
+**/
+typedef OutputEvent = Event<TOutputEvent>;
 
 /** 
     The reason for the breakpoint event. 
@@ -222,10 +232,7 @@ abstract BreakpointEventReason(String)
     var NEW = "new";
 }
 
-/** Event message for "breakpoint" event type.
-	The event indicates that some information about a breakpoint has changed.
-**/
-typedef BreakpointEvent = Event<{
+typedef TBreakpointEvent = {
     
 	var reason:BreakpointEventReason;
 
@@ -233,7 +240,12 @@ typedef BreakpointEvent = Event<{
         The breakpoint. 
     **/
 	var breakpoint: Breakpoint;
-}>;
+}
+
+/** Event message for "breakpoint" event type.
+	The event indicates that some information about a breakpoint has changed.
+**/
+typedef BreakpointEvent = Event<TBreakpointEvent>;
 
 /** 
     The reason for the module event. 
@@ -246,17 +258,19 @@ abstract ModuleEventReason(String)
     var REMOVED = "removed";
 }
 
-/** Event message for "module" event type.
-	The event indicates that some information about a module has changed.
-**/
-typedef ModuleEvent = Event<{
+typedef TModuleEvent = {
     var reason:ModuleEventReason;
 
     /** 
         The new, changed, or removed module. In case of 'removed' only the module id is used. 
     **/
     var module: Module;
-}>
+}
+
+/** Event message for "module" event type.
+	The event indicates that some information about a module has changed.
+**/
+typedef ModuleEvent = Event<TModuleEvent>;
 
 //---- Frontend Requests
 

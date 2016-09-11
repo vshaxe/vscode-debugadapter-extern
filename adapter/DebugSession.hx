@@ -1,4 +1,5 @@
 package adapter;
+
 import protocol.debug.Types;
 import protocol.debug.Types.Source as TSource;
 
@@ -42,7 +43,7 @@ extern class DebugSession extends ProtocolServer {
     function stepInTargetsRequest(response:StepInTargetsResponse, args:StepInTargetsArguments):Void;
     function gotoTargetsRequest(responses:GotoTargetsResponse, args:GotoTargetsArguments):Void;
     function completionsRequest(response:CompletionsResponse, args:CompletionsArguments):Void;
-    function customRequest<T>(command:String,response:Response<T>,args:Dynamic):Void;
+    function customRequest<T>(command:String, response:Response<T>, args:Dynamic):Void;
     function convertClientLineToDebugger(lisne:Int):Int;
     function convertDebuggerLineToClient(line:Int):Int;
     function convertClientColumnToDebugger(line:Int):Int;
@@ -51,153 +52,152 @@ extern class DebugSession extends ProtocolServer {
     function convertDebuggerPathToClient(debugPath:String):String;
 }
 
-@:jsRequire("vscode-debugadapter","Message")
+@:jsRequire("vscode-debugadapter", "Message")
 extern class Message {
-    public var seq: Int;
-    public var type: protocol.debug.MessageType;
+    var seq:Int;
+    var type:protocol.debug.MessageType;
 
-    public function new(type: String):Void;
+    function new(type:String):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Response")
+@:jsRequire("vscode-debugadapter", "Response")
 extern class Response<T> extends Message {
-    public var request_seq: Int;
-    public var success: Bool;
-    public var command: String;
+    var request_seq:Int;
+    var success:Bool;
+    var command:String;
 
-    public function new (request: Request<T>, ?message: String):Void;
+    function new(request:Request<T>, ?message:String):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Event")
+@:jsRequire("vscode-debugadapter", "Event")
 extern class Event<T> extends Message  {
-    public var event: String;
-    @:optional var body:T;
+    var event: String;
+    var body:T;
 
-    public function new(event: String, ?body:T);
+    function new(event:String, ?body:T);
 }
 
+@:jsRequire("vscode-debugadapter", "Source")
+extern class Source {
+    var name: String;
+    var path: String;
+    var sourceReference: Int;
 
-@:jsRequire("vscode-debugadapter","Source")
-extern class Source
-{
-    public var name: String;
-    public var path: String;
-    public var sourceReference: Int;
-
-    public function new (name: String, path: String, id: Int = 0, ?origin: String, ?data: Dynamic):Void;
+    function new (name:String, path:String, id:Int = 0, ?origin:String, ?data:Dynamic):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Scope")
+@:jsRequire("vscode-debugadapter", "Scope")
 extern class Scope {
-    public var name: String;
-    public var variablesReference: Int;
-    @:optional public var namedVariables:Int;
-    @:optional public var indexedVariables:Int;
-    public var expensive: Bool;
+    var name:String;
+    var variablesReference:Int;
+    var namedVariables:Int;
+    var indexedVariables:Int;
+    var expensive:Bool;
 
-    public function new(name: String, reference: Int, expensive: Bool = false):Void;
+    function new(name:String, reference:Int, expensive:Bool = false):Void;
 }
 
-@:jsRequire("vscode-debugadapter","StackFrame")
+@:jsRequire("vscode-debugadapter", "StackFrame")
 extern class StackFrame  {
-    public var pid: Int;
-    @:optional public var source: Source;
-    public var line: Int;
-    public var column: Int;
-    public var name: String;
+    var pid: Int;
+    var source: Source;
+    var line: Int;
+    var column: Int;
+    var name: String;
 
-    public function new (i: Int, nm: String, ?src: Source, ln: Int = 0, col: Int = 0):Void;
+    function new (i: Int, nm:String, ?src:Source, ln:Int = 0, col:Int = 0):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Thread")
+@:jsRequire("vscode-debugadapter", "Thread")
 extern class Thread {
-    public var id: Int;
-    public var name: String;
+    var id: Int;
+    var name: String;
 
-    public function new (id: Int, name: String):Void;
+    function new (id: Int, name: String):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Variable")
+@:jsRequire("vscode-debugadapter", "Variable")
 extern class Variable {
-    public var name: String;
-    public var value: String;
-    public var variablesReference: Int;
+    var name: String;
+    var value: String;
+    var variablesReference: Int;
 
-    public function new (name: String, value: String, ref: Int = 0, ?indexedVariables: Int, ?namedVariables: Int):Void;
+    function new (name: String, value: String, ref: Int = 0, ?indexedVariables: Int, ?namedVariables: Int):Void;
 }
 
-@:jsRequire("vscode-debugadapter","Breakpoint")
+@:jsRequire("vscode-debugadapter", "Breakpoint")
 extern class Breakpoint {
-    @:optional public var id:Int;
-    public var verified:Bool;
-    @:optional public var message:String;
-    @:optional public var source:TSource;
-    @:optional public var line:Int;
-    @:optional public var column:Int;
-    @:optional public var endLine:Int;
-    @:optional public var endColumn:Int;
-    public function new (verified:Bool, ?line: Int, ?column: Int, ?source: Source);
+    var id:Int;
+    var verified:Bool;
+    var message:String;
+    var source:TSource;
+    var line:Int;
+    var column:Int;
+    var endLine:Int;
+    var endColumn:Int;
+
+    function new (verified:Bool, ?line: Int, ?column: Int, ?source: Source);
 }
 
-@:jsRequire("vscode-debugadapter","Module")
+@:jsRequire("vscode-debugadapter", "Module")
 extern class Module {
-    public var id:haxe.extern.EitherType<Int,String>;
-    public var name: String;
+    var id:haxe.extern.EitherType<Int, String>;
+    var name: String;
 
-    public function new (id:haxe.extern.EitherType<Int,String>, name: String):Void;
+    function new (id:haxe.extern.EitherType<Int, String>, name:String):Void;
 }
 
-@:jsRequire("vscode-debugadapter","CompletionItem")
+@:jsRequire("vscode-debugadapter", "CompletionItem")
 extern class CompletionItem {
-    public var label: String;
-    public var start: Int;
-    public var length: Int;
+    var label: String;
+    var start: Int;
+    var length: Int;
 
-    public function new (label: String, start: Int, length: Int = 0):Void;
+    function new (label: String, start: Int, length: Int = 0):Void;
 }
 
-@:publicFields
-@:jsRequire("vscode-debugadapter","StoppedEvent")
-extern class StoppedEvent extends Event<{var reason: String;@:optional var threadId: Int;@:optional var text: String;@:optional var allThreadsStopped: Bool;}> {
+
+@:jsRequire("vscode-debugadapter", "StoppedEvent")
+extern class StoppedEvent extends Event<TStoppedEvent> {
     var reason: String;
-    @:optional var threadId: Int;
-    @:optional var text: String;
-    @:optional var allThreadsStopped: Bool;
+    var threadId: Int;
+    var text: String;
+    var allThreadsStopped: Bool;
 
-    public function new(reason: String, threadId: Int, exception_text: String = null):Void;
+    function new(reason:String, threadId:Int, ?exception_text:String):Void;
 }
 
-@:jsRequire("vscode-debugadapter","ContinuedEvent")
-extern class ContinuedEvent extends Event<{var threadId: Int;@:optional var allThreadsContinued: Bool;}> 
-{
-    public function new (threadId: Int, ?allThreadsContinued: Bool):Void;
+@:jsRequire("vscode-debugadapter", "ContinuedEvent")
+extern class ContinuedEvent extends Event<TContinuedEvent> {
+    function new (threadId:Int, ?allThreadsContinued:Bool):Void;
 }
 
-@:jsRequire("vscode-debugadapter","InitializedEvent")
+@:jsRequire("vscode-debugadapter", "InitializedEvent")
 extern class InitializedEvent extends Event<{}> {
-    public function new():Void;
+    function new():Void;
 }
-@:jsRequire("vscode-debugadapter","TerminatedEvent")
-extern class TerminatedEvent extends Event<{@:optional var restart:Bool;}> {
-    public function new(?restart:Bool):Void;
+
+@:jsRequire("vscode-debugadapter", "TerminatedEvent")
+extern class TerminatedEvent extends Event<TTerminatedEvent> {
+    function new(?restart:Bool):Void;
 }
-@:jsRequire("vscode-debugadapter","OutputEvent")
-extern class OutputEvent extends Event<{@:optional var category: OutputEventCategory;var output: String;var data: Dynamic;}>
-{
-    public function new (output: String, category: String = 'console'):Void;
+
+@:jsRequire("vscode-debugadapter", "OutputEvent")
+extern class OutputEvent extends Event<TOutputEvent> {
+    function new (output: String, category: String = 'console'):Void;
 }
-@:jsRequire("vscode-debugadapter","ThreadEvent")
-extern class ThreadEvent extends Event<{var reason: ThreadEventReason;var threadId: Int;}> 
-{
-    public function new (reason: String, threadId: Int):Void;
+
+@:jsRequire("vscode-debugadapter", "ThreadEvent")
+extern class ThreadEvent extends Event<TThreadEvent> {
+    function new (reason: String, threadId: Int):Void;
 }
-@:jsRequire("vscode-debugadapter","BreakpointEvent")
-extern class BreakpointEvent extends Event<{var reason:BreakpointEventReason;var breakpoint: Breakpoint;}>
-{
-    public function new (reason: BreakpointEventReason, breakpoint: Breakpoint):Void;
+
+@:jsRequire("vscode-debugadapter", "BreakpointEvent")
+extern class BreakpointEvent extends Event<TBreakpointEvent> {
+    function new (reason: BreakpointEventReason, breakpoint: Breakpoint):Void;
 }
-@:jsRequire("vscode-debugadapter","ModuleEvent")
-extern class ModuleEvent extends Event<{ var reason: ModuleEventReason; var module: Module;}>
-{
-    public function new (reason:ModuleEventReason, module: Module):Void;
+
+@:jsRequire("vscode-debugadapter", "ModuleEvent")
+extern class ModuleEvent extends Event<TModuleEvent> {
+    function new (reason:ModuleEventReason, module: Module):Void;
 }
