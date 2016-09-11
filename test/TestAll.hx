@@ -6,16 +6,14 @@ import testSupport.DebugClient;
 
 class CustomAdapter extends adapter.DebugSession {
 
-    public function new()
-    {
+    public function new() {
         super();
     
         setDebuggerLinesStartAt1(false);
         setDebuggerColumnsStartAt1(false);
     }
 
-    override function initializeRequest(response:InitializeResponse, args:InitializeRequestArguments)
-    {
+    override function initializeRequest(response:InitializeResponse, args:InitializeRequestArguments) {
         
         sendEvent(new InitializedEvent());
         // This debug adapter implements the configurationDoneRequest.
