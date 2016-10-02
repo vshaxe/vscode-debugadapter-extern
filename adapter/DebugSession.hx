@@ -14,7 +14,7 @@ extern class DebugSession extends ProtocolServer {
     public function setRunAsServer(enable:Bool):Void;
     public function shutdown():Void;
 
-    public function sendErrorResponse<T>(response:Response<T>, codeOrMessage:haxe.extern.EitherType<Int,Message>, ?format:String, ?variables:Dynamic, dest:String="user"):Void;
+    function sendErrorResponse<T>(response:Response<T>, codeOrMessage:haxe.extern.EitherType<Int,Message>, ?format:String, ?variables:Dynamic, dest:String="user"):Void;
     function runInTerminalRequest(args:RunInTerminalRequestArguments, timeout:Float, cb:RunInTerminalResponse->Void):Void;
     function dispatchRequest<T>(request:Request<T>):Void;
     function initializeRequest(response:InitializeResponse, args:InitializeRequestArguments):Void;
