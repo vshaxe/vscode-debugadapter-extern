@@ -5,9 +5,9 @@ typedef Types = {};
 @:enum
 abstract MessageType(String) from String
 {
-    var TYPE_REQUEST  = "request";
-    var TYPE_RESPONSE = "response";
-    var TYPE_EVENT    = "event";
+    var request = "request";
+    var response = "response";
+    var event = "event";
 }
 
 /** 
@@ -194,10 +194,10 @@ typedef ThreadEvent = Event<TThreadEvent>;
 @:enum
 abstract OutputEventCategory(String)
 {
-    var CONSOLE = "console";
-    var STDOUT  = "stdout";
-    var STDERR  = "stderr";
-    var TELEMETRY = "telemetry";
+    var console = "console";
+    var stdout  = "stdout";
+    var stderr  = "stderr";
+    var telemetry = "telemetry";
 }
 
 typedef TOutputEvent = {
@@ -228,8 +228,8 @@ typedef OutputEvent = Event<TOutputEvent>;
 @:enum
 abstract BreakpointEventReason(String)
 {
-    var CHANGED = "changed";
-    var NEW = "new";
+    var eventChanged = "changed";
+    var eventNew = "new";
 }
 
 typedef TBreakpointEvent = {
@@ -253,9 +253,9 @@ typedef BreakpointEvent = Event<TBreakpointEvent>;
 @:enum
 abstract ModuleEventReason(String)
 {
-    var NEW = "new";
-    var CHANGED = "changed";
-    var REMOVED = "removed";
+    var eventNew = "new";
+    var eventChanged = "changed";
+    var eventRemoved = "removed";
 }
 
 typedef TModuleEvent = {
@@ -283,8 +283,8 @@ typedef RunInTerminalRequest = Request<RunInTerminalRequestArguments>;
 @:enum
 abstract RunInTerminalArgumentsKind(String)
 {
-    var INTEGRATED = "integrated";
-    var EXTERNAL = "external";
+    var integrated = "integrated";
+    var external = "external";
 }
 
 /** 
@@ -589,8 +589,8 @@ typedef VariablesRequest = Request<VariablesArguments>;
 @:enum
 abstract VariableArgumentsFilter(String)
 {
-    var INDEXED = "indexed";
-    var NAMED   = "named";
+    var indexed = "indexed";
+    var named   = "named";
 }
 
 typedef VariablesArguments = {

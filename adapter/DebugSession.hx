@@ -14,7 +14,7 @@ extern class DebugSession extends ProtocolServer {
     public function setRunAsServer(enable:Bool):Void;
     public function shutdown():Void;
 
-    function sendErrorResponse<T>(response:Response<T>, codeOrMessage:haxe.extern.EitherType<Int,Message>, ?format:String, ?variables:Dynamic, dest:String="user"):Void;
+    public function sendErrorResponse<T>(response:Response<T>, codeOrMessage:haxe.extern.EitherType<Int,Message>, ?format:String, ?variables:Dynamic, dest:String="user"):Void;
     function runInTerminalRequest(args:RunInTerminalRequestArguments, timeout:Float, cb:RunInTerminalResponse->Void):Void;
     function dispatchRequest<T>(request:Request<T>):Void;
     function initializeRequest(response:InitializeResponse, args:InitializeRequestArguments):Void;
@@ -184,7 +184,7 @@ extern class TerminatedEvent extends Event<TTerminatedEvent> {
 
 @:jsRequire("vscode-debugadapter", "OutputEvent")
 extern class OutputEvent extends Event<TOutputEvent> {
-    function new (output: String, category: String = 'console'):Void;
+    function new (output: String, category:OutputEventCategory = "console"):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "ThreadEvent")
