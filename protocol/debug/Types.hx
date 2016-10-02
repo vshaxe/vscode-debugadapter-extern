@@ -3,8 +3,8 @@ package protocol.debug;
 typedef Types = {};
 
 @:enum
-abstract MessageType(String) from String
-{
+abstract MessageType(String) from String {
+
     var request = "request";
     var response = "response";
     var event = "event";
@@ -170,8 +170,8 @@ typedef TerminatedEvent = Event<TTerminatedEvent>;
 @:enum
 abstract ThreadEventReason(String)
 {
-    var STARTED = "started";
-    var EXITED  = "exited";
+    var started = "started";
+    var exited  = "exited";
 }
 
 typedef TThreadEvent = {
