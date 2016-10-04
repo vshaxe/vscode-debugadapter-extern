@@ -102,11 +102,20 @@ typedef Response<T> = {
 **/
 typedef InitializedEvent = Event<Dynamic>;
 
+@:enum
+abstract StopReason(String) to String {
+
+    var step = "step";
+    var breakpoint = "breakpoint";
+    var exception = "exception";
+    var pause = "pause";
+}
+
 typedef TStoppedEvent = {
     /** 
         The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause'). This string is shown in the UI. 
     **/
-    var reason: String;
+    var reason: StopReason;
 
     /** 
         The thread which was stopped. 
