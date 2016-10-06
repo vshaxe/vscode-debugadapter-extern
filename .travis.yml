@@ -4,7 +4,6 @@ language: haxe
 # Let's enable both linux and mac builds because why not?
 os:
   - linux
-  - osx
 
 # Test with Haxe 3.2.1 and Haxe development.
 haxe:
