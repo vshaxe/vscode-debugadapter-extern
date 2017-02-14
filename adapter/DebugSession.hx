@@ -22,29 +22,29 @@ extern class DebugSession extends ProtocolServer {
     function launchRequest(response:LaunchResponse, args:LaunchRequestArguments):Void;
     function attachRequest(response:AttachResponse, args:AttachRequestArguments):Void;
     function setBreakPointsRequest(response:SetBreakpointsResponse, args:SetBreakpointsArguments):Void;
-    function setFunctionBreakPointsReqsuest(response:SetFunctionBreakpointsResponse, args:SetFunctionBreakpointsArguments):Void;
-    function setExceptionBreakPointsRequest(ressponse:SetExceptionBreakpointsResponse, args:SetExceptionBreakpointsArguments):Void;
+    function setFunctionBreakPointsRequest(response:SetFunctionBreakpointsResponse, args:SetFunctionBreakpointsArguments):Void;
+    function setExceptionBreakPointsRequest(response:SetExceptionBreakpointsResponse, args:SetExceptionBreakpointsArguments):Void;
     function configurationDoneRequest(response:ConfigurationDoneResponse, args:ConfigurationDoneArguments):Void;
     function continueRequest(response:ContinueResponse, args:ContinueArguments):Void;
     function nextRequest(response:NextResponse, args:NextArguments):Void;
     function stepInRequest(response:StepInResponse, args:StepInArguments):Void;
     function stepOutRequest(responses:StepOutResponse, args:StepOutArguments):Void;
     function stepBackRequest(response:StepBackResponse, args:StepBackArguments):Void;
-    function restartFrameRequest(responsse:RestartFrameResponse, args:RestartFrameArguments):Void;
+    function restartFrameRequest(response:RestartFrameResponse, args:RestartFrameArguments):Void;
     function gotoRequest(response:GotoResponse, args:GotoArguments):Void;
     function pauseRequest(response:PauseResponse, args:PauseArguments):Void;
     function sourceRequest(response:SourceResponse, args:SourceArguments):Void;
     function threadsRequest(response:ThreadsResponse):Void;
-    function stackTraceRequest(responsse:StackTraceResponse, args:StackTraceArguments):Void;
+    function stackTraceRequest(response:StackTraceResponse, args:StackTraceArguments):Void;
     function scopesRequest(response:ScopesResponse, args:ScopesArguments):Void;
     function variablesRequest(response:VariablesResponse, args:VariablesArguments):Void;
-    function setVariableRequest(responsse:SetVariableResponse, args:SetVariableArguments):Void;
+    function setVariableRequest(response:SetVariableResponse, args:SetVariableArguments):Void;
     function evaluateRequest(response:EvaluateResponse, args:EvaluateArguments):Void;
     function stepInTargetsRequest(response:StepInTargetsResponse, args:StepInTargetsArguments):Void;
     function gotoTargetsRequest(responses:GotoTargetsResponse, args:GotoTargetsArguments):Void;
     function completionsRequest(response:CompletionsResponse, args:CompletionsArguments):Void;
     function customRequest<T>(command:String, response:Response<T>, args:Dynamic):Void;
-    function convertClientLineToDebugger(lisne:Int):Int;
+    function convertClientLineToDebugger(line:Int):Int;
     function convertDebuggerLineToClient(line:Int):Int;
     function convertClientColumnToDebugger(line:Int):Int;
     function convertDebuggerColumnToClient(line:Int):Int;
@@ -70,7 +70,7 @@ extern class Response<T> extends Message {
 }
 
 @:jsRequire("vscode-debugadapter", "Event")
-extern class Event<T> extends Message  {
+extern class Event<T> extends Message {
     var event: String;
     var body:T;
 
@@ -105,7 +105,7 @@ extern class StackFrame  {
     var column: Int;
     var name: String;
 
-    function new (i: Int, nm:String, ?src:Source, ln:Int = 0, col:Int = 0):Void;
+    function new(i: Int, nm:String, ?src:Source, ln:Int = 0, col:Int = 0):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "Thread")
@@ -113,7 +113,7 @@ extern class Thread {
     var id: Int;
     var name: String;
 
-    function new (id: Int, name: String):Void;
+    function new(id: Int, name: String):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "Variable")
@@ -122,7 +122,7 @@ extern class Variable {
     var value: String;
     var variablesReference: Int;
 
-    function new (name: String, value: String, ref: Int = 0, ?indexedVariables: Int, ?namedVariables: Int):Void;
+    function new(name: String, value: String, ref: Int = 0, ?indexedVariables: Int, ?namedVariables: Int):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "Breakpoint")
@@ -136,7 +136,7 @@ extern class Breakpoint {
     var endLine:Int;
     var endColumn:Int;
 
-    function new (verified:Bool, ?line: Int, ?column: Int, ?source: Source);
+    function new(verified:Bool, ?line: Int, ?column: Int, ?source: Source);
 }
 
 @:jsRequire("vscode-debugadapter", "Module")
@@ -144,7 +144,7 @@ extern class Module {
     var id:haxe.extern.EitherType<Int, String>;
     var name: String;
 
-    function new (id:haxe.extern.EitherType<Int, String>, name:String):Void;
+    function new(id:haxe.extern.EitherType<Int, String>, name:String):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "CompletionItem")
@@ -153,7 +153,7 @@ extern class CompletionItem {
     var start: Int;
     var length: Int;
 
-    function new (label: String, start: Int, length: Int = 0):Void;
+    function new(label: String, start: Int, length: Int = 0):Void;
 }
 
 
@@ -184,7 +184,7 @@ extern class TerminatedEvent extends Event<TTerminatedEvent> {
 
 @:jsRequire("vscode-debugadapter", "OutputEvent")
 extern class OutputEvent extends Event<TOutputEvent> {
-    function new (output: String, category:OutputEventCategory = "console"):Void;
+    function new(output: String, category:OutputEventCategory = "console"):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "ThreadEvent")
