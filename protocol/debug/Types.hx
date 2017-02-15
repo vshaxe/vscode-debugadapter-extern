@@ -393,7 +393,7 @@ typedef InitializeRequestArguments = {
 /** 
     Response to Initialize request. 
 **/
-typedef InitializeResponse = Response<Capabilites>;
+typedef InitializeResponse = Response<Capabilities>;
 
 /** 
     ConfigurationDone request; value of command field is "configurationDone".
@@ -720,7 +720,7 @@ typedef CompletionItem = {
     @:optional var length:Int;
 };
 
-typedef Capabilites = {
+typedef Capabilities = {
     @:optional var supportsConfigurationDoneRequest:Bool;
     @:optional var supportsFunctionBreakpoints:Bool;
     @:optional var supportsConditionalBreakpoints:Bool;
