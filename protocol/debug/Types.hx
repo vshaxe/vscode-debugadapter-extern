@@ -429,7 +429,7 @@ typedef InitializeRequestArguments = {
 }
 
 /**
-    Response to Initialize request.
+    Response to 'initialize' request.
 **/
 typedef InitializeResponse = Response<Capabilities>;
 
@@ -758,18 +758,61 @@ typedef CompletionItem = {
     @:optional var length:Int;
 };
 
+/**
+    Information about the capabilities of a debug adapter.
+**/
 typedef Capabilities = {
+    /** The debug adapter supports the configurationDoneRequest. */
     @:optional var supportsConfigurationDoneRequest:Bool;
+    /** The debug adapter supports function breakpoints. */
     @:optional var supportsFunctionBreakpoints:Bool;
+    /** The debug adapter supports conditional breakpoints. */
     @:optional var supportsConditionalBreakpoints:Bool;
+    /** The debug adapter supports breakpoints that break execution after a specified number of hits. */
+    @:optional var supportsHitConditionalBreakpoints:Bool;
+    /** The debug adapter supports a (side effect free) evaluate request for data hovers. */
     @:optional var supportsEvaluateForHovers:Bool;
+    /** Available filters or options for the setExceptionBreakpoints request. */
     @:optional var exceptionBreakpointFilters:Array<ExceptionBreakpointsFilter>;
+    /** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
     @:optional var supportsStepBack:Bool;
+    /** The debug adapter supports setting a variable to a value. */
     @:optional var supportsSetVariable:Bool;
+    /** The debug adapter supports restarting a frame. */
     @:optional var supportsRestartFrame:Bool;
+    /** The debug adapter supports the gotoTargetsRequest. */
     @:optional var supportsGotoTargetsRequest:Bool;
+    /** The debug adapter supports the stepInTargetsRequest. */
     @:optional var supportsStepInTargetsRequest:Bool;
+    /** The debug adapter supports the completionsRequest. */
     @:optional var supportsCompletionsRequest:Bool;
+    /** The debug adapter supports the modules request. */
+    @:optional var supportsModulesRequest:Bool;
+    /** The set of additional module information exposed by the debug adapter. */
+    @:optional var additionalModuleColumns:Array<ColumnDescriptor>;
+    /** Checksum algorithms supported by the debug adapter. */
+    @:optional var supportedChecksumAlgorithms:Array<ChecksumAlgorithm>;
+    /** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
+    @:optional var supportsRestartRequest:Bool;
+    /** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
+    @:optional var supportsExceptionOptions:Bool;
+    /** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
+    @:optional var supportsValueFormattingOptions:Bool;
+    /** The debug adapter supports the exceptionInfo request. */
+    @:optional var supportsExceptionInfoRequest:Bool;
+    /** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
+    @:optional var supportTerminateDebuggee:Bool;
+}
+
+/**
+    Names of checksum algorithms that may be supported by a debug adapter.
+**/
+@:enum
+abstract ChecksumAlgorithm(String) to String {
+    var MD5 = 'MD5';
+    var SHA1 = 'SHA1';
+    var SHA256 = 'SHA256';
+    var timestamp = 'timestamp';
 }
 
 typedef ExceptionBreakpointsFilter = {
