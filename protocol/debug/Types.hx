@@ -665,35 +665,64 @@ typedef StackTraceResponse = Response<{
     @:optional var totalFrames: Int;
 }>;
 
+/** Scopes request; value of command field is 'scopes'.
+    The request returns the variable scopes for a given stackframe ID.
+**/
 typedef ScopesRequest = Request<ScopesArguments>;
 
+/** Arguments for 'scopes' request. */
 typedef ScopesArguments = {
+    /** Retrieve the scopes for this stackframe. */
     var frameId:Int;
 }
 
+/** Response to 'scopes' request. */
 typedef ScopesResponse = Response<{
+    /** The scopes of the stackframe. If the array has length zero, there are no scopes available. */
     var scopes:Array<Scope>;
 }>;
 
+/** Variables request; value of command field is 'variables'.
+    Retrieves all child variables for the given variable reference.
+    An optional filter can be used to limit the fetched children to either named or indexed children.
+**/
 typedef VariablesRequest = Request<VariablesArguments>;
 
 @:enum
-abstract VariableArgumentsFilter(String)
-{
+abstract VariableArgumentsFilter(String) to String {
     var indexed = "indexed";
-    var named   = "named";
+    var named = "named";
 }
 
+/** Arguments for 'variables' request. */
 typedef VariablesArguments = {
+    /** The Variable reference. */
     var variablesReference:Int;
+
+    /** Optional filter to limit the child variables to either named or indexed. If ommited, both types are fetched. */
     @:optional var filter:VariableArgumentsFilter;
+
+    /** The index of the first variable to return; if omitted children start at 0. */
     @:optional var start:Int;
+
+    /** The number of variables to return. If count is missing or 0, all variables are returned. */
     @:optional var count:Int;
+
+    /** Specifies details on how to format the Variable values. */
+    @:optional var format:ValueFormat;
 }
 
+/** Response to 'variables' request. */
 typedef VariablesResponse = Response<{
-    var variables: Array<Variable>;
+    /** All (or a range) of variables for the given variable reference. */
+    var variables:Array<Variable>;
 }>;
+
+/** Provides formatting information for a value. */
+typedef ValueFormat = {
+    /** Display the value in hex. */
+    @:optional var hex:Bool;
+}
 
 typedef SetVariableRequest = Request<SetVariableArguments>;
 
