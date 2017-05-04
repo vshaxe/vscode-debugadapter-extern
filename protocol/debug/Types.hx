@@ -433,56 +433,98 @@ typedef InitializeRequestArguments = {
 **/
 typedef InitializeResponse = Response<Capabilities>;
 
-/**
-    ConfigurationDone request; value of command field is "configurationDone".
-    The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent)
-*/
+/** ConfigurationDone request; value of command field is 'configurationDone'.
+    The client of the debug protocol must send this request at the end of the sequence of configuration requests (which was started by the InitializedEvent).
+**/
 typedef ConfigurationDoneRequest = Request<ConfigurationDoneArguments>;
 
-/**
-    Arguments for "configurationDone" request.
-**/
-typedef ConfigurationDoneArguments = {
-    /* The configurationDone request has no standardized attributes. */
-};
+/** Arguments for 'configurationDone' request.
+    The configurationDone request has no standardized attributes.
+*/
+typedef ConfigurationDoneArguments = {};
 
 /**
- Response to "configurationDone" request. This is just an acknowledgement, so no body field is required.
+    Response to 'configurationDone' request. This is just an acknowledgement, so no body field is required.
 **/
 typedef ConfigurationDoneResponse = Response<{}>;
 
 /**
-    Launch request; value of command field is "launch".
+    Launch request; value of command field is 'launch'.
 */
 typedef LaunchRequest = Request<LaunchRequestArguments>;
 
 /**
-    Arguments for "launch" request.
+    Arguments for 'launch' request.
 */
 typedef LaunchRequestArguments = {
     /*
-    If noDebug is true the launch request should launch the program without enabling debugging.
+        If noDebug is true the launch request should launch the program without enabling debugging.
     */
     @:optional var noDebug:Bool;
 };
 
 /**
-    Response to "launch" request. This is just an acknowledgement, so no body field is required.
+    Response to 'launch' request. This is just an acknowledgement, so no body field is required.
 */
 typedef LaunchResponse = Response<{}>;
 
+/**
+    Attach request; value of command field is 'attach'.
+**/
 typedef AttachRequest = Request<AttachRequestArguments>;
 
+/**
+    Arguments for 'attach' request.
+    The attach request has no standardized attributes.
+**/
 typedef AttachRequestArguments = {};
 
+/**
+    Response to 'attach' request. This is just an acknowledgement, so no body field is required.
+**/
 typedef AttachResponse = Response<{}>;
 
+
+/** Restart request; value of command field is 'restart'.
+    Restarts a debug session. If the capability 'supportsRestartRequest' is missing or has the value false,
+    the client will implement 'restart' by terminating the debug adapter first and then launching it anew.
+    A debug adapter can override this default behaviour by implementing a restart request
+    and setting the capability 'supportsRestartRequest' to true.
+*/
+typedef RestartRequest = Request<RestartArguments>;
+
+/** Arguments for 'restart' request.
+    The restart request has no standardized attributes.
+*/
+typedef RestartArguments = {}
+
+/** Response to 'restart' request. This is just an acknowledgement, so no body field is required. */
+typedef RestartResponse = Response<{}>;
+
+/**
+    Disconnect request; value of command field is 'disconnect'.
+**/
 typedef DisconnectRequest = Request<DisconnectArguments>;
 
-typedef DisconnectArguments = {};
+/**
+    Arguments for 'disconnect' request.
+**/
+typedef DisconnectArguments = {
+    /** Indicates whether the debuggee should be terminated when the debugger is disconnected.
+        If unspecified, the debug adapter is free to do whatever it thinks is best.
+        A client can only rely on this attribute being properly honored if a debug adapter returns true for the 'supportTerminateDebuggee' capability.
+    **/
+    @:optional var terminateDebuggee:Bool;
+};
 
+/** Response to 'disconnect' request. This is just an acknowledgement, so no body field is required. **/
 typedef DisconnectResponse = Response <{}>;
 
+/** SetBreakpoints request; value of command field is 'setBreakpoints'.
+    Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
+    To clear all breakpoint for a source, specify an empty array.
+    When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
+**/
 typedef SetBreakpointsRequest = Request<SetBreakpointsArguments>;
 
 /**
@@ -502,6 +544,7 @@ typedef SetBreakpointsArguments = {
     /**
         Deprecated: The code locations of the breakpoints.
     */
+    @:deprecated
     @:optional var lines:Array<Int>;
 
     /**
@@ -510,13 +553,14 @@ typedef SetBreakpointsArguments = {
     @:optional var sourceModified:Bool;
 }
 
-/** Response to "setBreakpoints" request.
-        Returned is information about each breakpoint created by this request.
-        This includes the actual code location and whether the breakpoint could be verified.
-        The breakpoints returned are in the same order as the elements of the 'breakpoints'
-        (or the deprecated 'lines') in the SetBreakpointsArguments.
-*/
+/** Response to 'setBreakpoints' request.
+    Returned is information about each breakpoint created by this request.
+    This includes the actual code location and whether the breakpoint could be verified.
+    The breakpoints returned are in the same order as the elements of the 'breakpoints'
+    (or the deprecated 'lines') in the SetBreakpointsArguments.
+**/
 typedef SetBreakpointsResponse = Response<{
+    /** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
     var breakpoints:Array<Breakpoint>;
 }>;
 
@@ -944,10 +988,30 @@ typedef Variable = {
     @:optional var indexedVariables:Int;
 }
 
+/**
+    Properties of a breakpoint passed to the setBreakpoints request.
+**/
 typedef SourceBreakpoint = {
+    /**
+        The source line of the breakpoint.
+    **/
     var line:Int;
+
+    /**
+        An optional source column of the breakpoint.
+    **/
     @:optional var column:Int;
+
+    /**
+        An optional expression for conditional breakpoints.
+    **/
     @:optional var condition:String;
+
+    /**
+        An optional expression that controls how many hits of the breakpoint are ignored.
+        The backend is expected to interpret the expression as needed.
+    **/
+    @:optional var hitCondition:String;
 }
 
 typedef FunctionBreakpoint = {
@@ -955,14 +1019,25 @@ typedef FunctionBreakpoint = {
     @:optional var condition:String;
 }
 
+/**
+    Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.
+**/
 typedef Breakpoint = {
+    /** An optional unique identifier for the breakpoint. */
     @:optional var id:Int;
+    /** If true breakpoint could be set (but not necessarily at the desired location). */
     var verified:Bool;
+    /** An optional message about the state of the breakpoint. This is shown to the user and can be used to explain why a breakpoint could not be verified. */
     @:optional var message:String;
+    /** The source where the breakpoint is located. */
     @:optional var source:Source;
+    /** The start line of the actual range covered by the breakpoint. */
     @:optional var line:Int;
+    /** An optional start column of the actual range covered by the breakpoint. */
     @:optional var column:Int;
+    /** An optional end line of the actual range covered by the breakpoint. */
     @:optional var endLine:Int;
+    /** An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line. */
     @:optional var endColumn:Int;
 }
 
