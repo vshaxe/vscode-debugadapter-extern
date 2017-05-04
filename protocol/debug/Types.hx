@@ -1,6 +1,7 @@
 package protocol.debug;
 
 import haxe.extern.EitherType;
+import haxe.DynamicAccess;
 
 @:enum
 abstract MessageType(String) from String {
@@ -308,14 +309,13 @@ typedef ModuleEvent = Event<TModuleEvent>;
 //---- Frontend Requests
 
 /**
-    runInTerminal request; value of command field is "runInTerminal".
+    runInTerminal request; value of command field is 'runInTerminal'.
     With this request a debug adapter can run a command in a terminal.
-**/
+*/
 typedef RunInTerminalRequest = Request<RunInTerminalRequestArguments>;
 
 @:enum
-abstract RunInTerminalArgumentsKind(String)
-{
+abstract RunInTerminalRequestArgumentsKind(String) to String {
     var integrated = "integrated";
     var external = "external";
 }
@@ -327,7 +327,7 @@ typedef RunInTerminalRequestArguments = {
     /**
          What kind of terminal to launch.
     **/
-    @:optional var kind:RunInTerminalArgumentsKind;
+    @:optional var kind:RunInTerminalRequestArgumentsKind;
 
     /**
         Optional title of the terminal.
@@ -347,7 +347,7 @@ typedef RunInTerminalRequestArguments = {
     /**
         Environment key-value pairs that are added to the default environment.
     **/
-    @:optional var env:haxe.DynamicAccess<String>;
+    @:optional var env:DynamicAccess<String>;
 };
 
 /**
@@ -358,7 +358,7 @@ typedef RunInTerminalResponse = Response<{
         The process ID
     **/
     @:optional var processId:Int;
-}>
+}>;
 
 //---- Debug Adapter Requests
 
@@ -373,43 +373,57 @@ typedef ErrorResponse = Response<{
 }>;
 
 /**
-    Initialize request; value of command field is "initialize".
+    Initialize request; value of command field is 'initialize'.
 */
 typedef InitializeRequest = Request<InitializeRequestArguments>;
 
+@:enum
+abstract InitializeRequestArgumentsPathFormat(String) to String {
+    var path = "path";
+    var uri = "uri";
+}
+
+/**
+    Arguments for 'initialize' request.
+**/
 typedef InitializeRequestArguments = {
     /**
-    The ID of the debugger adapter. Used to select or verify debugger adapter.
+        The ID of the (frontend) client using this adapter.
+    **/
+    @:optional var clientID:String;
+
+    /**
+        The ID of the debug adapter.
     **/
     var adapterID:String;
 
     /**
-    If true all line numbers are 1-based (default).
+        If true all line numbers are 1-based (default).
     **/
     @:optional var linesStartAt1:Bool;
 
     /**
-    If true all column numbers are 1-based (default).
+        If true all column numbers are 1-based (default).
     **/
     @:optional var columnsStartAt1:Bool;
 
     /**
-    Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format.
+        Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format.
     **/
-    @:optional var pathFormat:String;
+    @:optional var pathFormat:InitializeRequestArgumentsPathFormat;
 
     /**
-    Client supports the optional type attribute for variables.
+        Client supports the optional type attribute for variables.
     **/
     @:optional var supportsVariableType:Bool;
 
     /**
-    Client supports the paging of variables.
+        Client supports the paging of variables.
     **/
     @:optional var supportsVariablePaging:Bool;
 
     /**
-    Client supports the runInTerminal request.
+        Client supports the runInTerminal request.
     **/
     @:optional var supportsRunInTerminalRequest:Bool;
 }
