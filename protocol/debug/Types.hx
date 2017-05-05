@@ -1047,12 +1047,32 @@ typedef StackFrame = {
     @:optional var presentationHint:StackFramePresentationHint;
 }
 
+/** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
 typedef Scope = {
+    /** Name of the scope such as 'Arguments', 'Locals'. */
     var name:String;
+    /** The variables of this scope can be retrieved by passing the value of variablesReference to the VariablesRequest. */
     var variablesReference:Int;
+    /** The number of named variables in this scope.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    */
     @:optional var namedVariables:Int;
+    /** The number of indexed variables in this scope.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    */
     @:optional var indexedVariables:Int;
+    /** If true, the number of variables in this scope is large or expensive to retrieve. */
     var expensive:Bool;
+    /** Optional source for this scope. */
+    @:optional var source:Source;
+    /** Optional start line of the range covered by this scope. */
+    @:optional var line:Int;
+    /** Optional start column of the range covered by this scope. */
+    @:optional var column:Int;
+    /** Optional end line of the range covered by this scope. */
+    @:optional var endLine:Int;
+    /** Optional end column of the range covered by this scope. */
+    @:optional var endColumn:Int;
 }
 
 typedef Variable = {
