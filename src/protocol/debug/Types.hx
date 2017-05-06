@@ -952,7 +952,7 @@ typedef ExceptionBreakpointsFilter = {
 typedef Message = {
     var id:Int;
     var format:String;
-    @:optional var variables:haxe.DynamicAccess<String>;
+    @:optional var variables:DynamicAccess<String>;
     @:optional var sendTelemetry:Bool;
     @:optional var showUser:Bool;
     @:optional var url:String;
