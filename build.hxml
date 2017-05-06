@@ -1,3 +1,6 @@
--main test.TestAll
+-cp src
+-cp test
+--macro include("", true, null, ["src"])
+-main TestAll
 -js bin/test.js
 -lib utest
