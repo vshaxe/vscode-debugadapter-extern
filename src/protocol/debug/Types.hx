@@ -981,12 +981,38 @@ typedef Thread = {
     var name:String;
 }
 
+/**
+    A Source is a descriptor for source code.
+    It is returned from the debug adapter as part of a StackFrame and it is used by clients when specifying breakpoints.
+**/
 typedef Source = {
+    /** The short name of the source. Every source returned from the debug adapter has a name. When sending a source to the debug adapter this name is optional. */
     @:optional var name:String;
+    /** The path of the source to be shown in the UI. It is only used to locate and load the content of the source if no sourceReference is specified (or its vaule is 0). */
     @:optional var path:String;
+    /** If sourceReference > 0 the contents of the source must be retrieved through the SourceRequest (even if a path is specified). A sourceReference is only valid for a session, so it must not be used to persist a source. */
     @:optional var sourceReference:Int;
+    /** An optional hint for how to present the source in the UI. A value of 'deemphasize' can be used to indicate that the source is not available or that it is skipped on stepping. */
+    @:optional var presentationHint:SourcePresentationHint;
+    /** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
     @:optional var origin:String;
+    /** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
     @:optional var adapterData:Dynamic;
+    /** The checksums associated with this file. */
+    @:optional var checksums:Array<Checksum>;
+}
+
+/** The checksum of an item calculated by the specified algorithm. */
+typedef Checksum = {
+    /** The algorithm used to calculate this checksum. */
+    var algorithm:ChecksumAlgorithm;
+    /** Value of the checksum. */
+    var checksum:String;
+}
+
+@:enum abstract SourcePresentationHint(String) to String {
+    var emphasize = 'emphasize';
+    var deemphasize = 'deemphasize';
 }
 
 @:enum
