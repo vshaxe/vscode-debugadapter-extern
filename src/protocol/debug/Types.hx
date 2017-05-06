@@ -831,6 +831,61 @@ typedef CompletionItem = {
     @:optional var length:Int;
 };
 
+
+/** ExceptionInfoRequest request; value of command field is 'exceptionInfo'.
+    Retrieves the details of the exception that caused the StoppedEvent to be raised.
+*/
+typedef ExceptionInfoRequest = Request<ExceptionInfoArguments>;
+
+/** Arguments for 'exceptionInfo' request. */
+typedef ExceptionInfoArguments = {
+    /** Thread for which exception information should be retrieved. */
+    var threadId:Int;
+}
+
+/** Response to 'exceptionInfo' request. */
+typedef ExceptionInfoResponse = Response<TExceptionInfoResponse>;
+
+typedef TExceptionInfoResponse = {
+    /** ID of the exception that was thrown. */
+    var exceptionId:String;
+    /** Descriptive text for the exception provided by the debug adapter. */
+    @:optional var description:String;
+    /** Mode that caused the exception notification to be raised. */
+    var breakMode:ExceptionBreakMode;
+    /** Detailed information about the exception. */
+    @:optional var details:ExceptionDetails;
+}
+
+/** This enumeration defines all possible conditions when a thrown exception should result in a break.
+    never: never breaks,
+    always: always breaks,
+    unhandled: breaks when excpetion unhandled,
+    userUnhandled: breaks if the exception is not handled by user code.
+*/
+@:enum abstract ExceptionBreakMode(String) to String {
+    var never = 'never';
+    var always = 'always';
+    var unhandled = 'unhandled';
+    var userUnhandled = 'userUnhandled';
+}
+
+/** Detailed information about an exception that has occurred. */
+typedef ExceptionDetails = {
+    /** Message contained in the exception. */
+    @:optional var message:String;
+    /** Short type name of the exception object. */
+    @:optional var typeName:String;
+    /** Fully-qualified type name of the exception object. */
+    @:optional var fullTypeName:String;
+    /** Optional expression that can be evaluated in the current scope to obtain the exception object. */
+    @:optional var evaluateName:String;
+    /** Stack trace at the time the exception was thrown. */
+    @:optional var stackTrace:String;
+    /** Details of the exception contained by this exception, if any. */
+    @:optional var innerException:Array<ExceptionDetails>;
+}
+
 /**
     Information about the capabilities of a debug adapter.
 **/
