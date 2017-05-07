@@ -726,14 +726,37 @@ typedef ValueFormat = {
 
 typedef SetVariableRequest = Request<SetVariableArguments>;
 
+/** Arguments for 'setVariable' request. */
 typedef SetVariableArguments = {
+    /** The reference of the variable container. */
     var variablesReference:Int;
+    /** The name of the variable. */
     var name:String;
+    /** The value of the variable. */
     var value:String;
+    /** Specifies details on how to format the response value. */
+    @:optional var format:ValueFormat;
 }
 
+/** Response to 'setVariable' request. */
 typedef SetVariableResponse = Response<{
+    /** The new value of the variable. */
     var value:String;
+
+    /** The type of the new value. Typically shown in the UI when hovering over the value. */
+    @:optional var type:String;
+
+    /** If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
+    @:optional var variablesReference:Int;
+
+    /** The number of named child variables.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    */
+    @:optional var namedVariables:Int;
+    /** The number of indexed child variables.
+        The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    */
+    @:optional var indexedVariables:Int;
 }>;
 
 typedef SourceRequest = Request<SourceArguments>;
