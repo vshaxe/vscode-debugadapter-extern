@@ -574,13 +574,20 @@ typedef SetFunctionBreakpointsResponse = Response<{
     var breakpoints:Array<Breakpoint>;
 }>;
 
+/** SetExceptionBreakpoints request; value of command field is 'setExceptionBreakpoints'.
+	The request configures the debuggers response to thrown exceptions. If an exception is configured to break, a StoppedEvent is fired (event type 'exception').
+*/
 typedef SetExceptionBreakpointsRequest = Request<SetExceptionBreakpointsArguments>;
 
-
+/** Arguments for 'setExceptionBreakpoints' request. */
 typedef SetExceptionBreakpointsArguments = {
+    /** IDs of checked exception options. The set of IDs is returned via the 'exceptionBreakpointFilters' capability. */
     var filters:Array<String>;
-};
+    /** Configuration options for selected exceptions. */
+    @:optional var exceptionOptions:Array<ExceptionOptions>;
+}
 
+/** Response to 'setExceptionBreakpoints' request. This is just an acknowledgement, so no body field is required. */
 typedef SetExceptionBreakpointsResponse = Response<{}>;
 
 typedef ContinueRequest = Request<ContinueArguments>;
@@ -880,17 +887,32 @@ typedef TExceptionInfoResponse = {
     @:optional var details:ExceptionDetails;
 }
 
-/** This enumeration defines all possible conditions when a thrown exception should result in a break.
-    never: never breaks,
-    always: always breaks,
-    unhandled: breaks when excpetion unhandled,
-    userUnhandled: breaks if the exception is not handled by user code.
-*/
+/** An ExceptionOptions assigns configuration options to a set of exceptions. */
+typedef ExceptionOptions = {
+    /** A path that selects a single or multiple exceptions in a tree. If 'path' is missing, the whole tree is selected. By convention the first segment of the path is a category that is used to group exceptions in the UI. */
+    @:optional var path:Array<ExceptionPathSegment>;
+    /** Condition when a thrown exception should result in a break. */
+    var breakMode:ExceptionBreakMode;
+}
+
+/** This enumeration defines all possible conditions when a thrown exception should result in a break. */
 @:enum abstract ExceptionBreakMode(String) to String {
+    /** never breaks */
     var never = 'never';
+    /** always breaks */
     var always = 'always';
+    /** breaks when exception unhandled */
     var unhandled = 'unhandled';
+    /** breaks if the exception is not handled by user code. */
     var userUnhandled = 'userUnhandled';
+}
+
+/** An ExceptionPathSegment represents a segment in a path that is used to match leafs or nodes in a tree of exceptions. If a segment consists of more than one name, it matches the names provided if 'negate' is false or missing or it matches anything except the names provided if 'negate' is true. */
+typedef ExceptionPathSegment = {
+    /** If false or missing this segment matches the names provided, otherwise it matches anything except the names provided. */
+    @:optional var negate:Bool;
+    /** Depending on the value of 'negate' the names that should match or not match. */
+    var names:Array<String>;
 }
 
 /** Detailed information about an exception that has occurred. */
