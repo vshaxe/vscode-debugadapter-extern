@@ -236,6 +236,11 @@ typedef TOutputEvent = {
     **/
     var output:String;
 
+
+	@:optional var source : Source;
+	@:optional var line : Int;
+	@:optional var column : Int;
+
     /**
         If an attribute 'variablesReference' exists and its value is > 0,
         the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest.
@@ -769,7 +774,7 @@ typedef SetVariableResponse = Response<{
 typedef SourceRequest = Request<SourceArguments>;
 
 typedef SourceArguments = {
-    var sourceReference:Float;
+    var sourceReference:Int;
 }
 
 typedef SourceResponse = Response<{
