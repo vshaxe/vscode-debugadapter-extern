@@ -1,22 +1,22 @@
 {
-    "name": "vscode-debugadapter-haxe",
-    "description": "externs for vscode-debugadapter-node",
-    "version": "0.0.1",
-    "author": "nulldivide@gmail.com",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vshaxe/vscode-debugadapter-extern"
-    },
-    "bugs": {
-        "url": "https://github.com/vshaxe/vscode-debugadapter-extern/issues"
-    },
-    "devDependencies": {
-        "vscode-debugprotocol": "^1.19.0",
-        "vscode-debugadapter": "^1.19.0",
-        "vscode-debugadapter-testsupport": "^1.19.0"
-    },
-    "scripts": {
-        "test": "node bin/test.js"
-    }
+	"name": "vscode-debugadapter-haxe",
+	"description": "externs for vscode-debugadapter-node",
+	"version": "0.0.1",
+	"author": "nulldivide@gmail.com",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vshaxe/vscode-debugadapter-extern"
+	},
+	"bugs": {
+		"url": "https://github.com/vshaxe/vscode-debugadapter-extern/issues"
+	},
+	"devDependencies": {
+		"vscode-debugprotocol": "^1.19.0",
+		"vscode-debugadapter": "^1.19.0",
+		"vscode-debugadapter-testsupport": "^1.19.0"
+	},
+	"scripts": {
+		"test": "node bin/test.js"
+	}
 }
