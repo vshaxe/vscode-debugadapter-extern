@@ -875,7 +875,30 @@ typedef CompletionItem = {
 	@:optional var text:String;
 	@:optional var start:Int;
 	@:optional var length:Int;
+	@:optional var type:CompletionItemType;
 };
+
+enum abstract CompletionItemType(String) from String {
+	var Method = "method";
+	var Function = "function";
+	var Constructor = "constructor";
+	var Field = "field";
+	var Variable = "variable";
+	var Class = "class";
+	var Interface = "interface";
+	var Module = "module";
+	var Property = "property";
+	var Unit = "unit";
+	var Value = "value";
+	var Enum = "enum";
+	var Keyword = "keyword";
+	var Snippet = "snippet";
+	var Text = "text";
+	var Color = "color";
+	var File = "file";
+	var Reference = "reference";
+	var Customcolor = "customcolor";
+}
 
 /** ExceptionInfoRequest request; value of command field is 'exceptionInfo'.
 	Retrieves the details of the exception that caused the StoppedEvent to be raised.
