@@ -753,28 +753,29 @@ typedef SetVariableArguments = {
 	@:optional var format:ValueFormat;
 }
 
+typedef SetResponse = {
+	/** The new value of the variable. */
+	var value:String;
+
+	/** The type of the new value. Typically shown in the UI when hovering over the value. */
+	@:optional var type:String;
+
+	/** If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
+	@:optional var variablesReference:Int;
+
+	/** The number of named child variables.
+		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+	 */
+	@:optional var namedVariables:Int;
+
+	/** The number of indexed child variables.
+		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+	 */
+	@:optional var indexedVariables:Int;
+}
+
 /** Response to 'setVariable' request. */
-typedef SetVariableResponse = Response<
-	{
-		/** The new value of the variable. */
-		var value:String;
-
-		/** The type of the new value. Typically shown in the UI when hovering over the value. */
-		@:optional var type:String;
-
-		/** If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
-		@:optional var variablesReference:Int;
-
-		/** The number of named child variables.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-		 */
-		@:optional var namedVariables:Int;
-
-		/** The number of indexed child variables.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-		 */
-		@:optional var indexedVariables:Int;
-	}>;
+typedef SetVariableResponse = Response<SetResponse>;
 
 typedef SourceRequest = Request<SourceArguments>;
 
@@ -958,6 +959,25 @@ typedef ExceptionDetails = {
 	@:optional var innerException:Array<ExceptionDetails>;
 }
 
+/** Arguments for 'setExpression' request. */
+typedef SetExpressionArguments = {
+	/** The l-value expression to assign to. */
+	var expression:String;
+
+	/** The value expression to assign to the l-value expression. */
+	var value:String;
+
+	/** Evaluate the expressions in the scope of this stack frame. If not specified, the expressions are evaluated in the global scope. */
+	@:optional var frameId:Int;
+
+	/** Specifies how the resulting value should be formatted. */
+	@:optional var format:ValueFormat;
+}
+
+typedef SetExpressionResponse = Response<{
+	var body:SetResponse;
+}>;
+
 /**
 	Information about the capabilities of a debug adapter.
 **/
@@ -1021,6 +1041,9 @@ typedef Capabilities = {
 
 	/** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
 	@:optional var supportTerminateDebuggee:Bool;
+
+	/** The debug adapter supports the 'setExpression' request. */
+	@:optional var supportsSetExpression:Bool;
 }
 
 /**

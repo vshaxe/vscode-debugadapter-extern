@@ -42,6 +42,7 @@ extern class DebugSession extends ProtocolServer {
 	function stepInTargetsRequest(response:StepInTargetsResponse, args:StepInTargetsArguments):Void;
 	function gotoTargetsRequest(responses:GotoTargetsResponse, args:GotoTargetsArguments):Void;
 	function completionsRequest(response:CompletionsResponse, args:CompletionsArguments):Void;
+	function setExpressionRequest(response:SetExpressionResponse, args:SetExpressionArguments):Void;
 	function customRequest<T>(command:String, response:Response<T>, args:Dynamic):Void;
 	function convertClientLineToDebugger(line:Int):Int;
 	function convertDebuggerLineToClient(line:Int):Int;
