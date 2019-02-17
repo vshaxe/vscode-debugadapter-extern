@@ -171,7 +171,7 @@ extern class TerminatedEvent extends Event<TTerminatedEvent> {
 
 @:jsRequire("vscode-debugadapter", "OutputEvent")
 extern class OutputEvent extends Event<TOutputEvent> {
-	function new(output:String, category:OutputEventCategory = "console"):Void;
+	function new(output:String, category:OutputEventCategory = console):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "ThreadEvent")
