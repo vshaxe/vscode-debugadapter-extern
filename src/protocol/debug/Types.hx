@@ -3,8 +3,7 @@ package protocol.debug;
 import haxe.extern.EitherType;
 import haxe.DynamicAccess;
 
-@:enum
-abstract MessageType(String) from String {
+enum abstract MessageType(String) from String {
 	var request = "request";
 	var response = "response";
 	var event = "event";
@@ -26,9 +25,7 @@ typedef ProtocolMessage = {
 
 	(type: request)
 **/
-typedef Request<T> = {
-	> ProtocolMessage,
-
+typedef Request<T> = ProtocolMessage & {
 	/**
 		The command to execute.
 	**/
@@ -37,7 +34,7 @@ typedef Request<T> = {
 	/**
 		Object containing arguments for the command.
 	**/
-	@:optional var arguments:T;
+	var ?arguments:T;
 }
 
 /**
@@ -45,9 +42,7 @@ typedef Request<T> = {
 
 	(type: event)
 **/
-typedef Event<T> = {
-	> ProtocolMessage,
-
+typedef Event<T> = ProtocolMessage & {
 	/**
 		Type of event.
 	**/
@@ -56,15 +51,13 @@ typedef Event<T> = {
 	/**
 		Event-specific information.
 	**/
-	@:optional var body:T;
+	var ?body:T;
 }
 
 /**
 	Response to a request.
 **/
-typedef Response<T> = {
-	> ProtocolMessage,
-
+typedef Response<T> = ProtocolMessage & {
 	/**
 		Sequence number of the corresponding request.
 	**/
@@ -83,12 +76,12 @@ typedef Response<T> = {
 	/**
 		Contains error message if success == false.
 	**/
-	@:optional var message:String;
+	var ?message:String;
 
 	/**
 		Contains request result if success is true and optional error details if success is false.
 	**/
-	@:optional var body:T;
+	var ?body:T;
 }
 
 //---- Events
@@ -106,8 +99,7 @@ typedef Response<T> = {
 **/
 typedef InitializedEvent = Event<Dynamic>;
 
-@:enum
-abstract StopReason(String) to String {
+enum abstract StopReason(String) to String {
 	var step = "step";
 	var breakpoint = "breakpoint";
 	var exception = "exception";
@@ -125,24 +117,24 @@ typedef TStoppedEvent = {
 	/**
 		The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is.
 	**/
-	@:optional var description:String;
+	var ?description:String;
 
 	/**
 		The thread which was stopped.
 	**/
-	@:optional var threadId:Int;
+	var ?threadId:Int;
 
 	/**
 		Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI.
 	**/
-	@:optional var text:String;
+	var ?text:String;
 
 	/**
 		If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
 		*  The client should use this information to enable that all threads can be expanded to access their stacktraces.
 		*  If the attribute is missing or false, only the thread with the given threadId can be expanded.
 	**/
-	@:optional var allThreadsStopped:Bool;
+	var ?allThreadsStopped:Bool;
 }
 
 /** Event message for 'stopped' event type.
@@ -160,7 +152,7 @@ typedef TContinuedEvent = {
 	/**
 		If allThreadsContinued is true, a debug adapter can announce that all threads have continued.
 	**/
-	@:optional var allThreadsContinued:Bool;
+	var ?allThreadsContinued:Bool;
 };
 
 /** Event message for 'continued' event type.
@@ -186,7 +178,7 @@ typedef TTerminatedEvent = {
 	/**
 		A debug adapter may set 'restart' to true to request that the front end restarts the session.
 	**/
-	@:optional var restart:Bool;
+	var ?restart:Bool;
 };
 
 /** Event message for 'terminated' event types.
@@ -194,8 +186,7 @@ typedef TTerminatedEvent = {
 **/
 typedef TerminatedEvent = Event<TTerminatedEvent>;
 
-@:enum
-abstract ThreadEventReason(String) to String {
+enum abstract ThreadEventReason(String) to String {
 	var started = "started";
 	var exited = "exited";
 }
@@ -217,8 +208,7 @@ typedef TThreadEvent = {
 **/
 typedef ThreadEvent = Event<TThreadEvent>;
 
-@:enum
-abstract OutputEventCategory(String) to String {
+enum abstract OutputEventCategory(String) to String {
 	var console = "console";
 	var stdout = "stdout";
 	var stderr = "stderr";
@@ -229,21 +219,21 @@ typedef TOutputEvent = {
 	/**
 		The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed.
 	**/
-	@:optional var category:OutputEventCategory;
+	var ?category:OutputEventCategory;
 
 	/**
 		The output to report.
 	**/
 	var output:String;
-	@:optional var source:Source;
-	@:optional var line:Int;
-	@:optional var column:Int;
+	var ?source:Source;
+	var ?line:Int;
+	var ?column:Int;
 
 	/**
 		If an attribute 'variablesReference' exists and its value is > 0,
 		the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest.
 	 */
-	@:optional var variablesReference:Int;
+	var ?variablesReference:Int;
 
 	/**
 		Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format.
@@ -259,8 +249,7 @@ typedef OutputEvent = Event<TOutputEvent>;
 /**
 	The reason for the breakpoint event.
 **/
-@:enum
-abstract BreakpointEventReason(String) to String {
+enum abstract BreakpointEventReason(String) to String {
 	var eventChanged = "changed";
 	var eventNew = "new";
 }
@@ -285,8 +274,7 @@ typedef BreakpointEvent = Event<TBreakpointEvent>;
 /**
 	The reason for the module event.
 **/
-@:enum
-abstract ModuleEventReason(String) to String {
+enum abstract ModuleEventReason(String) to String {
 	var eventNew = "new";
 	var eventChanged = "changed";
 	var eventRemoved = "removed";
@@ -308,7 +296,6 @@ typedef TModuleEvent = {
 	The event indicates that some information about a module has changed.
 **/
 typedef ModuleEvent = Event<TModuleEvent>;
-
 //---- Frontend Requests
 
 /**
@@ -317,8 +304,7 @@ typedef ModuleEvent = Event<TModuleEvent>;
  */
 typedef RunInTerminalRequest = Request<RunInTerminalRequestArguments>;
 
-@:enum
-abstract RunInTerminalRequestArgumentsKind(String) to String {
+enum abstract RunInTerminalRequestArgumentsKind(String) to String {
 	var integrated = "integrated";
 	var external = "external";
 }
@@ -330,12 +316,12 @@ typedef RunInTerminalRequestArguments = {
 	/**
 		What kind of terminal to launch.
 	**/
-	@:optional var kind:RunInTerminalRequestArgumentsKind;
+	var ?kind:RunInTerminalRequestArgumentsKind;
 
 	/**
 		Optional title of the terminal.
 	**/
-	@:optional var title:String;
+	var ?title:String;
 
 	/**
 		Working directory of the command.
@@ -350,7 +336,7 @@ typedef RunInTerminalRequestArguments = {
 	/**
 		Environment key-value pairs that are added to the default environment.
 	**/
-	@:optional var env:DynamicAccess<String>;
+	var ?env:DynamicAccess<String>;
 };
 
 /**
@@ -360,7 +346,7 @@ typedef RunInTerminalResponse = Response<{
 	/**
 		The process ID
 	**/
-	@:optional var processId:Int;
+	var ?processId:Int;
 }>;
 
 //---- Debug Adapter Requests
@@ -372,7 +358,7 @@ typedef ErrorResponse = Response<{
 	/**
 		An optional, structured error message.
 	**/
-	@:optional var error:Message;
+	var ?error:Message;
 }>;
 
 /**
@@ -380,8 +366,7 @@ typedef ErrorResponse = Response<{
  */
 typedef InitializeRequest = Request<InitializeRequestArguments>;
 
-@:enum
-abstract InitializeRequestArgumentsPathFormat(String) to String {
+enum abstract InitializeRequestArgumentsPathFormat(String) to String {
 	var path = "path";
 	var uri = "uri";
 }
@@ -393,7 +378,7 @@ typedef InitializeRequestArguments = {
 	/**
 		The ID of the (frontend) client using this adapter.
 	**/
-	@:optional var clientID:String;
+	var ?clientID:String;
 
 	/**
 		The ID of the debug adapter.
@@ -403,32 +388,32 @@ typedef InitializeRequestArguments = {
 	/**
 		If true all line numbers are 1-based (default).
 	**/
-	@:optional var linesStartAt1:Bool;
+	var ?linesStartAt1:Bool;
 
 	/**
 		If true all column numbers are 1-based (default).
 	**/
-	@:optional var columnsStartAt1:Bool;
+	var ?columnsStartAt1:Bool;
 
 	/**
 		Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format.
 	**/
-	@:optional var pathFormat:InitializeRequestArgumentsPathFormat;
+	var ?pathFormat:InitializeRequestArgumentsPathFormat;
 
 	/**
 		Client supports the optional type attribute for variables.
 	**/
-	@:optional var supportsVariableType:Bool;
+	var ?supportsVariableType:Bool;
 
 	/**
 		Client supports the paging of variables.
 	**/
-	@:optional var supportsVariablePaging:Bool;
+	var ?supportsVariablePaging:Bool;
 
 	/**
 		Client supports the runInTerminal request.
 	**/
-	@:optional var supportsRunInTerminalRequest:Bool;
+	var ?supportsRunInTerminalRequest:Bool;
 }
 
 /**
@@ -463,7 +448,7 @@ typedef LaunchRequestArguments = {
 	/*
 		If noDebug is true the launch request should launch the program without enabling debugging.
 	 */
-	@:optional var noDebug:Bool;
+	var ?noDebug:Bool;
 };
 
 /**
@@ -516,7 +501,7 @@ typedef DisconnectArguments = {
 		If unspecified, the debug adapter is free to do whatever it thinks is best.
 		A client can only rely on this attribute being properly honored if a debug adapter returns true for the 'supportTerminateDebuggee' capability.
 	**/
-	@:optional var terminateDebuggee:Bool;
+	var ?terminateDebuggee:Bool;
 };
 
 /** Response to 'disconnect' request. This is just an acknowledgement, so no body field is required. **/
@@ -541,18 +526,18 @@ typedef SetBreakpointsArguments = {
 	/**
 		The code locations of the breakpoints.
 	**/
-	@:optional var breakpoints:Array<SourceBreakpoint>;
+	var ?breakpoints:Array<SourceBreakpoint>;
 
 	/**
 		Deprecated: The code locations of the breakpoints.
 	 */
 	@:deprecated
-	@:optional var lines:Array<Int>;
+	var ?lines:Array<Int>;
 
 	/**
 		A value of true indicates that the underlying source has been modified which results in new breakpoint locations.
 	 */
-	@:optional var sourceModified:Bool;
+	var ?sourceModified:Bool;
 }
 
 /** Response to 'setBreakpoints' request.
@@ -561,11 +546,10 @@ typedef SetBreakpointsArguments = {
 	The breakpoints returned are in the same order as the elements of the 'breakpoints'
 	(or the deprecated 'lines') in the SetBreakpointsArguments.
 **/
-typedef SetBreakpointsResponse = Response<
-	{
-		/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
-		var breakpoints:Array<Breakpoint>;
-	}>;
+typedef SetBreakpointsResponse = Response<{
+	/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
+	var breakpoints:Array<Breakpoint>;
+}>;
 
 typedef SetFunctionBreakpointsRequest = Request<SetFunctionBreakpointsArguments>;
 
@@ -588,12 +572,11 @@ typedef SetExceptionBreakpointsArguments = {
 	var filters:Array<String>;
 
 	/** Configuration options for selected exceptions. */
-	@:optional var exceptionOptions:Array<ExceptionOptions>;
+	var ?exceptionOptions:Array<ExceptionOptions>;
 }
 
 /** Response to 'setExceptionBreakpoints' request. This is just an acknowledgement, so no body field is required. */
 typedef SetExceptionBreakpointsResponse = Response<{}>;
-
 typedef ContinueRequest = Request<ContinueArguments>;
 
 typedef ContinueArguments = {
@@ -601,7 +584,7 @@ typedef ContinueArguments = {
 }
 
 typedef ContinueResponse = Response<{
-	@:optional var allThreadsContinued:Bool;
+	var ?allThreadsContinued:Bool;
 }>
 
 typedef NextRequest = Request<NextArguments>;
@@ -611,16 +594,14 @@ typedef NextArguments = {
 }
 
 typedef NextResponse = Response<{}>;
-
 typedef StepInRequest = Request<StepInArguments>;
 
 typedef StepInArguments = {
 	var threadId:Int;
-	@:optional var targetId:Int;
+	var ?targetId:Int;
 }
 
 typedef StepInResponse = Response<{}>;
-
 typedef StepOutRequest = Request<StepOutArguments>;
 
 typedef StepOutArguments = {
@@ -628,7 +609,6 @@ typedef StepOutArguments = {
 }
 
 typedef StepOutResponse = Response<{}>;
-
 typedef StepBackRequest = Request<StepBackArguments>;
 
 typedef StepBackArguments = {
@@ -636,7 +616,6 @@ typedef StepBackArguments = {
 }
 
 typedef StepBackResponse = Response<{}>;
-
 typedef RestartFrameRequest = Request<RestartFrameArguments>;
 
 typedef RestartFrameArguments = {
@@ -644,7 +623,6 @@ typedef RestartFrameArguments = {
 }
 
 typedef RestartFrameResponse = Response<{}>;
-
 typedef GotoRequest = Request<GotoArguments>;
 
 typedef GotoArguments = {
@@ -653,7 +631,6 @@ typedef GotoArguments = {
 }
 
 typedef GotoResponse = Response<{}>;
-
 typedef PauseRequest = Request<PauseArguments>;
 
 typedef PauseArguments = {
@@ -661,20 +638,19 @@ typedef PauseArguments = {
 }
 
 typedef PauseResponse = Response<{}>;
-
 typedef StackTraceRequest = Request<StackTraceArguments>;
 
 typedef StackTraceArguments = {
 	var threadId:Int;
-	@:optional var startFrame:Int;
-	@:optional var levels:Int;
+	var ?startFrame:Int;
+	var ?levels:Int;
 }
 
 typedef StackTraceResponse = Response<{
 	var stackFrames:Array<StackFrame>;
 
 	/** The total number of frames available. */
-	@:optional var totalFrames:Int;
+	var ?totalFrames:Int;
 }>;
 
 /** Scopes request; value of command field is 'scopes'.
@@ -700,8 +676,7 @@ typedef ScopesResponse = Response<{
 **/
 typedef VariablesRequest = Request<VariablesArguments>;
 
-@:enum
-abstract VariableArgumentsFilter(String) to String {
+enum abstract VariableArgumentsFilter(String) to String {
 	var indexed = "indexed";
 	var named = "named";
 }
@@ -712,16 +687,16 @@ typedef VariablesArguments = {
 	var variablesReference:Int;
 
 	/** Optional filter to limit the child variables to either named or indexed. If ommited, both types are fetched. */
-	@:optional var filter:VariableArgumentsFilter;
+	var ?filter:VariableArgumentsFilter;
 
 	/** The index of the first variable to return; if omitted children start at 0. */
-	@:optional var start:Int;
+	var ?start:Int;
 
 	/** The number of variables to return. If count is missing or 0, all variables are returned. */
-	@:optional var count:Int;
+	var ?count:Int;
 
 	/** Specifies details on how to format the Variable values. */
-	@:optional var format:ValueFormat;
+	var ?format:ValueFormat;
 }
 
 /** Response to 'variables' request. */
@@ -733,7 +708,7 @@ typedef VariablesResponse = Response<{
 /** Provides formatting information for a value. */
 typedef ValueFormat = {
 	/** Display the value in hex. */
-	@:optional var hex:Bool;
+	var ?hex:Bool;
 }
 
 typedef SetVariableRequest = Request<SetVariableArguments>;
@@ -750,7 +725,7 @@ typedef SetVariableArguments = {
 	var value:String;
 
 	/** Specifies details on how to format the response value. */
-	@:optional var format:ValueFormat;
+	var ?format:ValueFormat;
 }
 
 typedef SetResponse = {
@@ -758,25 +733,24 @@ typedef SetResponse = {
 	var value:String;
 
 	/** The type of the new value. Typically shown in the UI when hovering over the value. */
-	@:optional var type:String;
+	var ?type:String;
 
 	/** If variablesReference is > 0, the new value is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
-	@:optional var variablesReference:Int;
+	var ?variablesReference:Int;
 
 	/** The number of named child variables.
 		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 	 */
-	@:optional var namedVariables:Int;
+	var ?namedVariables:Int;
 
 	/** The number of indexed child variables.
 		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 	 */
-	@:optional var indexedVariables:Int;
+	var ?indexedVariables:Int;
 }
 
 /** Response to 'setVariable' request. */
 typedef SetVariableResponse = Response<SetResponse>;
-
 typedef SourceRequest = Request<SourceArguments>;
 
 typedef SourceArguments = {
@@ -785,7 +759,7 @@ typedef SourceArguments = {
 
 typedef SourceResponse = Response<{
 	var content:String;
-	@:optional var mimeType:String;
+	var ?mimeType:String;
 }>;
 
 typedef ThreadsRequest = Request<{}>;
@@ -797,8 +771,8 @@ typedef ThreadsResponse = Response<{
 typedef ModulesRequest = Request<ModulesArguments>;
 
 typedef ModulesArguments = {
-	@:optional var startModule:Int;
-	@:optional var moduleCount:Int;
+	var ?startModule:Int;
+	var ?moduleCount:Int;
 }
 
 typedef ModulesResponse = Response<{
@@ -810,29 +784,28 @@ typedef EvaluateRequest = Request<EvaluateArguments>;
 
 typedef EvaluateArguments = {
 	var expression:String;
-	@:optional var frameId:Int;
-	@:optional var context:String;
+	var ?frameId:Int;
+	var ?context:String;
 }
 
-typedef EvaluateResponse = Response<
-	{
-		/** The result of the evaluate request. */
-		var result:String;
+typedef EvaluateResponse = Response<{
+	/** The result of the evaluate request. */
+	var result:String;
 
-		/** The optional type of the evaluate result. */
-		@:optional var type:String;
+	/** The optional type of the evaluate result. */
+	var ?type:String;
 
-		/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
-		var variablesReference:Int;
+	/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest */
+	var variablesReference:Int;
 
-		/** The number of named child variables.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
-		@:optional var namedVariables:Int;
+	/** The number of named child variables.
+		The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+	var ?namedVariables:Int;
 
-		/** The number of indexed child variables.
-			The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
-		@:optional var indexedVariables:Int;
-	}>;
+	/** The number of indexed child variables.
+		The client can use this optional information to present the variables in a paged UI and fetch them in chunks. */
+	var ?indexedVariables:Int;
+}>;
 
 typedef StepInTargetsRequest = Request<StepInTargetsArguments>;
 
@@ -842,14 +815,14 @@ typedef StepInTargetsArguments = {
 
 typedef StepInTargetsResponse = Response<{
 	var targets:Array<StepInTarget>;
-}>
+}>;
 
 typedef GotoTargetsRequest = Request<GotoTargetsArguments>;
 
 typedef GotoTargetsArguments = {
 	var source:Source;
 	var line:Int;
-	@:optional var column:Int;
+	var ?column:Int;
 }
 
 typedef GotoTargetsResponse = Response<{
@@ -859,10 +832,10 @@ typedef GotoTargetsResponse = Response<{
 typedef CompletionsRequest = Request<CompletionsArguments>;
 
 typedef CompletionsArguments = {
-	@:optional var frameId:Int;
+	var ?frameId:Int;
 	var text:String;
 	var column:Int;
-	@:optional var line:Int;
+	var ?line:Int;
 }
 
 typedef CompletionsResponse = Response<{
@@ -872,10 +845,10 @@ typedef CompletionsResponse = Response<{
 
 typedef CompletionItem = {
 	var label:String;
-	@:optional var text:String;
-	@:optional var start:Int;
-	@:optional var length:Int;
-	@:optional var type:CompletionItemType;
+	var ?text:String;
+	var ?start:Int;
+	var ?length:Int;
+	var ?type:CompletionItemType;
 };
 
 enum abstract CompletionItemType(String) from String {
@@ -919,26 +892,26 @@ typedef TExceptionInfoResponse = {
 	var exceptionId:String;
 
 	/** Descriptive text for the exception provided by the debug adapter. */
-	@:optional var description:String;
+	var ?description:String;
 
 	/** Mode that caused the exception notification to be raised. */
 	var breakMode:ExceptionBreakMode;
 
 	/** Detailed information about the exception. */
-	@:optional var details:ExceptionDetails;
+	var ?details:ExceptionDetails;
 }
 
 /** An ExceptionOptions assigns configuration options to a set of exceptions. */
 typedef ExceptionOptions = {
 	/** A path that selects a single or multiple exceptions in a tree. If 'path' is missing, the whole tree is selected. By convention the first segment of the path is a category that is used to group exceptions in the UI. */
-	@:optional var path:Array<ExceptionPathSegment>;
+	var ?path:Array<ExceptionPathSegment>;
 
 	/** Condition when a thrown exception should result in a break. */
 	var breakMode:ExceptionBreakMode;
 }
 
 /** This enumeration defines all possible conditions when a thrown exception should result in a break. */
-@:enum abstract ExceptionBreakMode(String) to String {
+enum abstract ExceptionBreakMode(String) to String {
 	/** never breaks */
 	var never = 'never';
 
@@ -955,7 +928,7 @@ typedef ExceptionOptions = {
 /** An ExceptionPathSegment represents a segment in a path that is used to match leafs or nodes in a tree of exceptions. If a segment consists of more than one name, it matches the names provided if 'negate' is false or missing or it matches anything except the names provided if 'negate' is true. */
 typedef ExceptionPathSegment = {
 	/** If false or missing this segment matches the names provided, otherwise it matches anything except the names provided. */
-	@:optional var negate:Bool;
+	var ?negate:Bool;
 
 	/** Depending on the value of 'negate' the names that should match or not match. */
 	var names:Array<String>;
@@ -964,22 +937,22 @@ typedef ExceptionPathSegment = {
 /** Detailed information about an exception that has occurred. */
 typedef ExceptionDetails = {
 	/** Message contained in the exception. */
-	@:optional var message:String;
+	var ?message:String;
 
 	/** Short type name of the exception object. */
-	@:optional var typeName:String;
+	var ?typeName:String;
 
 	/** Fully-qualified type name of the exception object. */
-	@:optional var fullTypeName:String;
+	var ?fullTypeName:String;
 
 	/** Optional expression that can be evaluated in the current scope to obtain the exception object. */
-	@:optional var evaluateName:String;
+	var ?evaluateName:String;
 
 	/** Stack trace at the time the exception was thrown. */
-	@:optional var stackTrace:String;
+	var ?stackTrace:String;
 
 	/** Details of the exception contained by this exception, if any. */
-	@:optional var innerException:Array<ExceptionDetails>;
+	var ?innerException:Array<ExceptionDetails>;
 }
 
 /** Arguments for 'setExpression' request. */
@@ -991,10 +964,10 @@ typedef SetExpressionArguments = {
 	var value:String;
 
 	/** Evaluate the expressions in the scope of this stack frame. If not specified, the expressions are evaluated in the global scope. */
-	@:optional var frameId:Int;
+	var ?frameId:Int;
 
 	/** Specifies how the resulting value should be formatted. */
-	@:optional var format:ValueFormat;
+	var ?format:ValueFormat;
 }
 
 typedef SetExpressionResponse = Response<{
@@ -1006,74 +979,73 @@ typedef SetExpressionResponse = Response<{
 **/
 typedef Capabilities = {
 	/** The debug adapter supports the configurationDoneRequest. */
-	@:optional var supportsConfigurationDoneRequest:Bool;
+	var ?supportsConfigurationDoneRequest:Bool;
 
 	/** The debug adapter supports function breakpoints. */
-	@:optional var supportsFunctionBreakpoints:Bool;
+	var ?supportsFunctionBreakpoints:Bool;
 
 	/** The debug adapter supports conditional breakpoints. */
-	@:optional var supportsConditionalBreakpoints:Bool;
+	var ?supportsConditionalBreakpoints:Bool;
 
 	/** The debug adapter supports breakpoints that break execution after a specified number of hits. */
-	@:optional var supportsHitConditionalBreakpoints:Bool;
+	var ?supportsHitConditionalBreakpoints:Bool;
 
 	/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
-	@:optional var supportsEvaluateForHovers:Bool;
+	var ?supportsEvaluateForHovers:Bool;
 
 	/** Available filters or options for the setExceptionBreakpoints request. */
-	@:optional var exceptionBreakpointFilters:Array<ExceptionBreakpointsFilter>;
+	var ?exceptionBreakpointFilters:Array<ExceptionBreakpointsFilter>;
 
 	/** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
-	@:optional var supportsStepBack:Bool;
+	var ?supportsStepBack:Bool;
 
 	/** The debug adapter supports setting a variable to a value. */
-	@:optional var supportsSetVariable:Bool;
+	var ?supportsSetVariable:Bool;
 
 	/** The debug adapter supports restarting a frame. */
-	@:optional var supportsRestartFrame:Bool;
+	var ?supportsRestartFrame:Bool;
 
 	/** The debug adapter supports the gotoTargetsRequest. */
-	@:optional var supportsGotoTargetsRequest:Bool;
+	var ?supportsGotoTargetsRequest:Bool;
 
 	/** The debug adapter supports the stepInTargetsRequest. */
-	@:optional var supportsStepInTargetsRequest:Bool;
+	var ?supportsStepInTargetsRequest:Bool;
 
 	/** The debug adapter supports the completionsRequest. */
-	@:optional var supportsCompletionsRequest:Bool;
+	var ?supportsCompletionsRequest:Bool;
 
 	/** The debug adapter supports the modules request. */
-	@:optional var supportsModulesRequest:Bool;
+	var ?supportsModulesRequest:Bool;
 
 	/** The set of additional module information exposed by the debug adapter. */
-	@:optional var additionalModuleColumns:Array<ColumnDescriptor>;
+	var ?additionalModuleColumns:Array<ColumnDescriptor>;
 
 	/** Checksum algorithms supported by the debug adapter. */
-	@:optional var supportedChecksumAlgorithms:Array<ChecksumAlgorithm>;
+	var ?supportedChecksumAlgorithms:Array<ChecksumAlgorithm>;
 
 	/** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
-	@:optional var supportsRestartRequest:Bool;
+	var ?supportsRestartRequest:Bool;
 
 	/** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
-	@:optional var supportsExceptionOptions:Bool;
+	var ?supportsExceptionOptions:Bool;
 
 	/** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
-	@:optional var supportsValueFormattingOptions:Bool;
+	var ?supportsValueFormattingOptions:Bool;
 
 	/** The debug adapter supports the exceptionInfo request. */
-	@:optional var supportsExceptionInfoRequest:Bool;
+	var ?supportsExceptionInfoRequest:Bool;
 
 	/** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
-	@:optional var supportTerminateDebuggee:Bool;
+	var ?supportTerminateDebuggee:Bool;
 
 	/** The debug adapter supports the 'setExpression' request. */
-	@:optional var supportsSetExpression:Bool;
+	var ?supportsSetExpression:Bool;
 }
 
 /**
 	Names of checksum algorithms that may be supported by a debug adapter.
 **/
-@:enum
-abstract ChecksumAlgorithm(String) to String {
+enum abstract ChecksumAlgorithm(String) to String {
 	var MD5 = 'MD5';
 	var SHA1 = 'SHA1';
 	var SHA256 = 'SHA256';
@@ -1083,17 +1055,17 @@ abstract ChecksumAlgorithm(String) to String {
 typedef ExceptionBreakpointsFilter = {
 	var filter:String;
 	var label:String;
-	// @:optional var default:Bool;
+	// var ?default:Bool;
 }
 
 typedef Message = {
 	var id:Int;
 	var format:String;
-	@:optional var variables:DynamicAccess<String>;
-	@:optional var sendTelemetry:Bool;
-	@:optional var showUser:Bool;
-	@:optional var url:String;
-	@:optional var urlLabel:String;
+	var ?variables:DynamicAccess<String>;
+	var ?sendTelemetry:Bool;
+	var ?showUser:Bool;
+	var ?url:String;
+	var ?urlLabel:String;
 }
 
 /** A Module object represents a row in the modules view.
@@ -1119,42 +1091,42 @@ typedef Module = {
 	/**
 		Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 	**/
-	@:optional var path:String;
+	var ?path:String;
 
 	/**
 		True if the module is optimized.
 	**/
-	@:optional var isOptimized:Bool;
+	var ?isOptimized:Bool;
 
 	/**
 		True if the module is considered 'user code' by a debugger that supports 'Just My Code'.
 	**/
-	@:optional var isUserCode:Bool;
+	var ?isUserCode:Bool;
 
 	/**
 		Version of Module.
 	**/
-	@:optional var version:String;
+	var ?version:String;
 
 	/**
 		User understandable description of if symbols were found for the module (ex: 'Symbols Loaded', 'Symbols not found', etc.
 	**/
-	@:optional var symbolStatus:String;
+	var ?symbolStatus:String;
 
 	/**
 		Logical full path to the symbol file. The exact definition is implementation defined.
 	**/
-	@:optional var symbolFilePath:String;
+	var ?symbolFilePath:String;
 
 	/**
 		Module created or modified.
 	**/
-	@:optional var dateTimeStamp:String;
+	var ?dateTimeStamp:String;
 
 	/**
 		Address range covered by this module.
 	**/
-	@:optional var addressRange:String;
+	var ?addressRange:String;
 }
 
 typedef ColumnDescriptor = {
@@ -1179,25 +1151,25 @@ typedef Thread = {
 **/
 typedef Source = {
 	/** The short name of the source. Every source returned from the debug adapter has a name. When sending a source to the debug adapter this name is optional. */
-	@:optional var name:String;
+	var ?name:String;
 
 	/** The path of the source to be shown in the UI. It is only used to locate and load the content of the source if no sourceReference is specified (or its vaule is 0). */
-	@:optional var path:String;
+	var ?path:String;
 
 	/** If sourceReference > 0 the contents of the source must be retrieved through the SourceRequest (even if a path is specified). A sourceReference is only valid for a session, so it must not be used to persist a source. */
-	@:optional var sourceReference:Int;
+	var ?sourceReference:Int;
 
 	/** An optional hint for how to present the source in the UI. A value of 'deemphasize' can be used to indicate that the source is not available or that it is skipped on stepping. */
-	@:optional var presentationHint:SourcePresentationHint;
+	var ?presentationHint:SourcePresentationHint;
 
 	/** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
-	@:optional var origin:String;
+	var ?origin:String;
 
 	/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
-	@:optional var adapterData:Dynamic;
+	var ?adapterData:Dynamic;
 
 	/** The checksums associated with this file. */
-	@:optional var checksums:Array<Checksum>;
+	var ?checksums:Array<Checksum>;
 }
 
 /** The checksum of an item calculated by the specified algorithm. */
@@ -1209,13 +1181,12 @@ typedef Checksum = {
 	var checksum:String;
 }
 
-@:enum abstract SourcePresentationHint(String) to String {
+enum abstract SourcePresentationHint(String) to String {
 	var emphasize = 'emphasize';
 	var deemphasize = 'deemphasize';
 }
 
-@:enum
-abstract StackFramePresentationHint(String) to String {
+enum abstract StackFramePresentationHint(String) to String {
 	var normal = 'normal';
 	var label = 'label';
 }
@@ -1238,7 +1209,7 @@ typedef StackFrame = {
 	/**
 		The optional source of the frame.
 	**/
-	@:optional var source:Source;
+	var ?source:Source;
 
 	/**
 		The line within the file of the frame. If source is null or doesn't exist, line is 0 and must be ignored.
@@ -1253,23 +1224,23 @@ typedef StackFrame = {
 	/**
 		An optional end line of the range covered by the stack frame.
 	**/
-	@:optional var endLine:Int;
+	var ?endLine:Int;
 
 	/**
 		An optional end column of the range covered by the stack frame.
 	**/
-	@:optional var endColumn:Int;
+	var ?endColumn:Int;
 
 	/**
 		The module associated with this frame, if any.
 	**/
-	@:optional var moduleId:EitherType<Int, String>;
+	var ?moduleId:EitherType<Int, String>;
 
 	/**
 		An optional hint for how to present this frame in the UI.
 		A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator.
 	**/
-	@:optional var presentationHint:StackFramePresentationHint;
+	var ?presentationHint:StackFramePresentationHint;
 }
 
 /** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
@@ -1283,30 +1254,30 @@ typedef Scope = {
 	/** The number of named variables in this scope.
 		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 	 */
-	@:optional var namedVariables:Int;
+	var ?namedVariables:Int;
 
 	/** The number of indexed variables in this scope.
 		The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
 	 */
-	@:optional var indexedVariables:Int;
+	var ?indexedVariables:Int;
 
 	/** If true, the number of variables in this scope is large or expensive to retrieve. */
 	var expensive:Bool;
 
 	/** Optional source for this scope. */
-	@:optional var source:Source;
+	var ?source:Source;
 
 	/** Optional start line of the range covered by this scope. */
-	@:optional var line:Int;
+	var ?line:Int;
 
 	/** Optional start column of the range covered by this scope. */
-	@:optional var column:Int;
+	var ?column:Int;
 
 	/** Optional end line of the range covered by this scope. */
-	@:optional var endLine:Int;
+	var ?endLine:Int;
 
 	/** Optional end column of the range covered by this scope. */
-	@:optional var endColumn:Int;
+	var ?endColumn:Int;
 }
 
 /** A Variable is a name/value pair.
@@ -1324,13 +1295,13 @@ typedef Variable = {
 	var value:String;
 
 	/** The type of the variable's value. Typically shown in the UI when hovering over the value. */
-	@:optional var type:String;
+	var ?type:String;
 
 	/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
-	@:optional var kind:String;
+	var ?kind:String;
 
 	/** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
-	@:optional var evaluateName:String;
+	var ?evaluateName:String;
 
 	/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
 	var variablesReference:Int;
@@ -1338,12 +1309,12 @@ typedef Variable = {
 	/** The number of named child variables.
 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 	 */
-	@:optional var namedVariables:Int;
+	var ?namedVariables:Int;
 
 	/** The number of indexed child variables.
 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
 	 */
-	@:optional var indexedVariables:Int;
+	var ?indexedVariables:Int;
 }
 
 /**
@@ -1358,23 +1329,23 @@ typedef SourceBreakpoint = {
 	/**
 		An optional source column of the breakpoint.
 	**/
-	@:optional var column:Int;
+	var ?column:Int;
 
 	/**
 		An optional expression for conditional breakpoints.
 	**/
-	@:optional var condition:String;
+	var ?condition:String;
 
 	/**
 		An optional expression that controls how many hits of the breakpoint are ignored.
 		The backend is expected to interpret the expression as needed.
 	**/
-	@:optional var hitCondition:String;
+	var ?hitCondition:String;
 }
 
 typedef FunctionBreakpoint = {
 	var name:String;
-	@:optional var condition:String;
+	var ?condition:String;
 }
 
 /**
@@ -1382,28 +1353,28 @@ typedef FunctionBreakpoint = {
 **/
 typedef Breakpoint = {
 	/** An optional unique identifier for the breakpoint. */
-	@:optional var id:Int;
+	var ?id:Int;
 
 	/** If true breakpoint could be set (but not necessarily at the desired location). */
 	var verified:Bool;
 
 	/** An optional message about the state of the breakpoint. This is shown to the user and can be used to explain why a breakpoint could not be verified. */
-	@:optional var message:String;
+	var ?message:String;
 
 	/** The source where the breakpoint is located. */
-	@:optional var source:Source;
+	var ?source:Source;
 
 	/** The start line of the actual range covered by the breakpoint. */
-	@:optional var line:Int;
+	var ?line:Int;
 
 	/** An optional start column of the actual range covered by the breakpoint. */
-	@:optional var column:Int;
+	var ?column:Int;
 
 	/** An optional end line of the actual range covered by the breakpoint. */
-	@:optional var endLine:Int;
+	var ?endLine:Int;
 
 	/** An optional end column of the actual range covered by the breakpoint. If no end line is given, then the end column is assumed to be in the start line. */
-	@:optional var endColumn:Int;
+	var ?endColumn:Int;
 }
 
 typedef StepInTarget = {
@@ -1415,7 +1386,7 @@ typedef GotoTarget = {
 	var id:Int;
 	var label:String;
 	var line:Int;
-	@:optional var column:Int;
-	@:optional var endLine:Int;
-	@:optional var endColumn:Int;
+	var ?column:Int;
+	var ?endLine:Int;
+	var ?endColumn:Int;
 }
