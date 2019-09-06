@@ -1,5 +1,6 @@
 -cp src
 -cp test
+-D js-es=6
 --macro include("", true, null, ["src"])
 -main TestAll
 -js bin/test.js
