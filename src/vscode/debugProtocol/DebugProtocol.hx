@@ -4,9 +4,9 @@ import haxe.extern.EitherType;
 import haxe.DynamicAccess;
 
 enum abstract MessageType(String) from String {
-	var request = "request";
-	var response = "response";
-	var event = "event";
+	var Request = "request";
+	var Response = "response";
+	var Event = "event";
 }
 
 /**
@@ -110,14 +110,14 @@ typedef ErrorResponse = Response<{
 typedef InitializedEvent = Event<Dynamic>;
 
 enum abstract StopReason(String) to String {
-	var step = "step";
-	var breakpoint = "breakpoint";
-	var exception = "exception";
-	var pause = "pause";
-	var entry = "entry";
-	var goto = "goto";
-	var functionBreakpoint = "function breakpoint";
-	var dataBreakpoint = "data breakpoint";
+	var Step = "step";
+	var Breakpoint = "breakpoint";
+	var Exception = "exception";
+	var Pause = "pause";
+	var Entry = "entry";
+	var Goto = "goto";
+	var FunctionBreakpoint = "function breakpoint";
+	var DataBreakpoint = "data breakpoint";
 }
 
 typedef TStoppedEvent = {
@@ -211,8 +211,8 @@ typedef TTerminatedEvent = {
 typedef TerminatedEvent = Event<TTerminatedEvent>;
 
 enum abstract ThreadEventReason(String) to String {
-	var started = "started";
-	var exited = "exited";
+	var Started = "started";
+	var Exited = "exited";
 }
 
 typedef TThreadEvent = {
@@ -235,10 +235,10 @@ typedef TThreadEvent = {
 typedef ThreadEvent = Event<TThreadEvent>;
 
 enum abstract OutputEventCategory(String) to String {
-	var console = "console";
-	var stdout = "stdout";
-	var stderr = "stderr";
-	var telemetry = "telemetry";
+	var Console = "console";
+	var Stdout = "stdout";
+	var Stderr = "stderr";
+	var Telemetry = "telemetry";
 }
 
 typedef TOutputEvent = {
@@ -287,9 +287,9 @@ typedef TOutputEvent = {
 typedef OutputEvent = Event<TOutputEvent>;
 
 enum abstract BreakpointEventReason(String) to String {
-	var eventChanged = "changed";
-	var eventNew = "new";
-	var eventRemoved = "removed";
+	var Changed = "changed";
+	var New = "new";
+	var Removed = "removed";
 }
 
 typedef TBreakpointEvent = {
@@ -315,9 +315,9 @@ typedef BreakpointEvent = Event<TBreakpointEvent>;
 	The reason for the module event.
 **/
 enum abstract ModuleEventReason(String) to String {
-	var eventNew = "new";
-	var eventChanged = "changed";
-	var eventRemoved = "removed";
+	var New = "new";
+	var Changed = "changed";
+	var Removed = "removed";
 }
 
 typedef TModuleEvent = {
@@ -339,9 +339,9 @@ typedef TModuleEvent = {
 typedef ModuleEvent = Event<TModuleEvent>;
 
 enum abstract LoadedSourceEventReason(String) to String {
-	var eventNew = "new";
-	var eventChanged = "changed";
-	var eventRemoved = "removed";
+	var New = "new";
+	var Changed = "changed";
+	var Removed = "removed";
 }
 
 typedef TLoadedSourceEvent = {
@@ -366,17 +366,17 @@ enum abstract ProcessEventStartMethod(String) {
 	/**
 		Process was launched under the debugger.
 	**/
-	var launch = "launch";
+	var Launch = "launch";
 
 	/**
 		Debugger attached to an existing process.
 	**/
-	var attach = "attach";
+	var Attach = "attach";
 
 	/**
 		A project launcher component has launched a new process in a suspended state and then asked the debugger to attach.
 	**/
-	var attachForSuspendedLaunch = "attachForSuspendedLaunch";
+	var AttachForSuspendedLaunch = "attachForSuspendedLaunch";
 }
 
 typedef TProcessEvent = {
@@ -434,9 +434,9 @@ typedef CapabilitiesEvent = Event<TCapabilitiesEvent>;
 **/
 typedef RunInTerminalRequest = Request<RunInTerminalRequestArguments>;
 
-enum abstract RunInTerminalRequestArgumentsKind(String) to String {
-	var integrated = "integrated";
-	var external = "external";
+enum abstract RunInTerminalRequestArgumentsKind(String) {
+	var Integrated = "integrated";
+	var External = "external";
 }
 
 /**
@@ -492,9 +492,9 @@ typedef RunInTerminalResponse = Response<{
 **/
 typedef InitializeRequest = Request<InitializeRequestArguments>;
 
-enum abstract InitializeRequestArgumentsPathFormat(String) to String {
-	var path = "path";
-	var uri = "uri";
+enum abstract InitializeRequestArgumentsPathFormat(String) {
+	var Path = "path";
+	var Uri = "uri";
 }
 
 /**
@@ -1170,9 +1170,9 @@ typedef ScopesResponse = Response<{
 **/
 typedef VariablesRequest = Request<VariablesArguments>;
 
-enum abstract VariableArgumentsFilter(String) to String {
-	var indexed = "indexed";
-	var named = "named";
+enum abstract VariableArgumentsFilter(String) {
+	var Indexed = "indexed";
+	var Named = "named";
 }
 
 /**
@@ -1420,17 +1420,17 @@ enum abstract EvaluateArgumentsContext(String) {
 	/**
 		evaluate is run in a watch.
 	**/
-	var watch = "watch";
+	var Watch = "watch";
 
 	/**
 		evaluate is run from REPL console.
 	**/
-	var repl = "repl";
+	var Repl = "repl";
 
 	/**
 		evaluate is run from a data hover.
 	**/
-	var hover = "hover";
+	var Hover = "hover";
 }
 
 /**
@@ -2083,10 +2083,10 @@ typedef Module = {
 }
 
 enum abstract ColumnDescriptorType(String) {
-	var string = "string";
-	var number = "number";
-	var boolean = "boolean";
-	var unixTimestampUTC = "unixTimestampUTC";
+	var String = "string";
+	var Number = "number";
+	var Boolean = "boolean";
+	var UnixTimestampUTC = "unixTimestampUTC";
 }
 
 /**
@@ -2143,10 +2143,10 @@ typedef Thread = {
 	var name:String;
 }
 
-enum abstract SourcePresentationHint(String) to String {
-	var normal = 'normal';
-	var emphasize = 'emphasize';
-	var deemphasize = 'deemphasize';
+enum abstract SourcePresentationHint(String) {
+	var Normal = 'normal';
+	var Emphasize = 'emphasize';
+	var Deemphasize = 'deemphasize';
 }
 
 /**
@@ -2195,10 +2195,10 @@ typedef Source = {
 	var ?checksums:Array<Checksum>;
 }
 
-enum abstract StackFramePresentationHint(String) to String {
-	var normal = 'normal';
-	var label = 'label';
-	var subtle = 'subtle';
+enum abstract StackFramePresentationHint(String) {
+	var Normal = 'normal';
+	var Label = 'label';
+	var Subtle = 'subtle';
 }
 
 /**
@@ -2254,10 +2254,10 @@ typedef StackFrame = {
 	var ?presentationHint:StackFramePresentationHint;
 }
 
-enum abstract ScopePresentationHint(String) {
-	var arguments = 'arguments';
-	var locals = 'locals';
-	var registers = 'registers';
+enum abstract ScopePresentationHint(String) from String {
+	var Arguments = 'arguments';
+	var Locals = 'locals';
+	var Registers = 'registers';
 }
 
 /**
@@ -2388,102 +2388,102 @@ enum abstract VariableKind(String) from String {
 	/**
 		Indicates that the object is a property.
 	**/
-	var property = 'property';
+	var Property = 'property';
 
 	/**
 		Indicates that the object is a method.
 	**/
-	var method = 'method';
+	var Method = 'method';
 
 	/**
 		Indicates that the object is a class.
 	**/
-	var class_ = 'class';
+	var Class = 'class';
 
 	/**
 		Indicates that the object is data.
 	**/
-	var data = 'data';
+	var Data = 'data';
 
 	/**
 		Indicates that the object is an event.
 	**/
-	var event = 'event';
+	var Event = 'event';
 
 	/**
 		Indicates that the object is a base class.
 	**/
-	var baseClass = 'baseClass';
+	var BaseClass = 'baseClass';
 
 	/**
 		Indicates that the object is an inner class.
 	**/
-	var innerClass = 'innerClass';
+	var InnerClass = 'innerClass';
 
 	/**
 		Indicates that the object is an interface.
 	**/
-	var interface_ = 'interface';
+	var Interface = 'interface';
 
 	/**
 		Indicates that the object is the most derived class.
 	**/
-	var mostDerivedClass = 'mostDerivedClass';
+	var MostDerivedClass = 'mostDerivedClass';
 
 	/**
 		Indicates that the object is virtual, that means it is a synthetic object introduced by the adapter for rendering purposes, e.g. an index range for large arrays.
 	**/
-	var virtual = 'virtual';
+	var Virtual = 'virtual';
 
 	/**
 		Indicates that a data breakpoint is registered for the object.
 	**/
-	var dataBreakpoint = 'dataBreakpoint';
+	var DataBreakpoint = 'dataBreakpoint';
 }
 
 enum abstract VariableAttribute(String) from String {
 	/**
 		Indicates that the object is static.
 	**/
-	var static_ = 'static';
+	var Static = 'static';
 
 	/**
 		Indicates that the object is a constant.
 	**/
-	var constant = 'constant';
+	var Constant = 'constant';
 
 	/**
 		Indicates that the object is read only.
 	**/
-	var readOnly = 'readOnly';
+	var ReadOnly = 'readOnly';
 
 	/**
 		Indicates that the object is a raw string.
 	**/
-	var rawString = 'rawString';
+	var RawString = 'rawString';
 
 	/**
 		Indicates that the object can have an Object ID created for it.
 	**/
-	var hasObjectId = 'hasObjectId';
+	var HasObjectId = 'hasObjectId';
 
 	/**
 		Indicates that the object has an Object ID associated with it.
 	**/
-	var canHaveObjectId = 'canHaveObjectId';
+	var CanHaveObjectId = 'canHaveObjectId';
 
 	/**
 		Indicates that the evaluation had side effects.
 	**/
-	var hasSideEffects = 'hasSideEffects';
+	var HasSideEffects = 'hasSideEffects';
 }
 
 enum abstract VariableVisibility(String) from String {
-	var public_ = 'public';
-	var private_ = 'private';
-	var protected = 'protected';
-	var internal = 'internal';
-	var final_ = 'final';
+	var Public = 'public';
+	var Private = 'private';
+	var Protected = 'protected';
+	var Internal = 'internal';
+	var Final = 'final';
 }
 
 /**
@@ -2559,9 +2559,9 @@ typedef FunctionBreakpoint = {
 	This enumeration defines all possible access types for data breakpoints.
 **/
 enum abstract DataBreakpointAccessType(String) {
-	var read = 'read';
-	var write = 'write';
-	var readWrite = 'readWrite';
+	var Read = 'read';
+	var Write = 'write';
+	var ReadWrite = 'readWrite';
 }
 
 /**
@@ -2755,11 +2755,11 @@ enum abstract CompletionItemType(String) from String {
 /**
 	Names of checksum algorithms that may be supported by a debug adapter.
 **/
-enum abstract ChecksumAlgorithm(String) to String {
+enum abstract ChecksumAlgorithm(String) {
 	var MD5 = 'MD5';
 	var SHA1 = 'SHA1';
 	var SHA256 = 'SHA256';
-	var timestamp = 'timestamp';
+	var Timestamp = 'timestamp';
 }
 
 /**
@@ -2849,22 +2849,22 @@ enum abstract ExceptionBreakMode(String) {
 	/**
 		never breaks
 	**/
-	var never = 'never';
+	var Never = 'never';
 
 	/**
 		always breaks
 	**/
-	var always = 'always';
+	var Always = 'always';
 
 	/**
 		breaks when exception unhandled
 	**/
-	var unhandled = 'unhandled';
+	var Unhandled = 'unhandled';
 
 	/**
 		breaks if the exception is not handled by user code.
 	**/
-	var userUnhandled = 'userUnhandled';
+	var UserUnhandled = 'userUnhandled';
 }
 
 /**

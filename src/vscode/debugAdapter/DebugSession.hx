@@ -26,7 +26,7 @@ extern class Scope {
 
 @:jsRequire("vscode-debugadapter", "StackFrame")
 extern class StackFrame {
-	var pid:Int;
+	var id:Int;
 	var source:Source;
 	var line:Int;
 	var column:Int;
@@ -103,7 +103,7 @@ extern class TerminatedEvent extends Event<TTerminatedEvent> {
 
 @:jsRequire("vscode-debugadapter", "OutputEvent")
 extern class OutputEvent extends Event<TOutputEvent> {
-	function new(output:String, category:OutputEventCategory = console):Void;
+	function new(output:String, category:OutputEventCategory = Console):Void;
 }
 
 @:jsRequire("vscode-debugadapter", "ThreadEvent")
