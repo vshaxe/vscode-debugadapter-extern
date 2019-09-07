@@ -1,4 +1,4 @@
-package adapter;
+package vscode.debugAdapter;
 
 @:jsRequire("vscode-debugadapter", "LoggingDebugSession")
 extern class LoggingDebugSession extends DebugSession {

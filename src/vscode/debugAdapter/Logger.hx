@@ -1,6 +1,6 @@
-package adapter;
+package vscode.debugAdapter;
 
-import protocol.debug.Types.OutputEvent;
+import vscode.debugProtocol.DebugProtocol.OutputEvent;
 
 @:jsRequire("vscode-debugadapter", "LogLevel")
 extern enum abstract LogLevel(Int) {

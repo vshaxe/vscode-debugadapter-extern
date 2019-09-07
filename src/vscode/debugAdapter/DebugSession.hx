@@ -1,10 +1,10 @@
-package adapter;
+package vscode.debugAdapter;
 
-import protocol.debug.Types;
-import protocol.debug.Types.Source as TSource;
 import haxe.extern.EitherType;
-import adapter.Protocol;
-import adapter.Messages;
+import vscode.debugAdapter.Protocol;
+import vscode.debugProtocol.DebugProtocol;
+import vscode.debugProtocol.DebugProtocol.Source as TSource;
+import vscode.debugAdapter.Messages;
 
 @:jsRequire("vscode-debugadapter", "Source")
 extern class Source {

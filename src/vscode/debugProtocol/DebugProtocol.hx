@@ -1,4 +1,4 @@
-package protocol.debug;
+package vscode.debugProtocol;
 
 import haxe.extern.EitherType;
 import haxe.DynamicAccess;

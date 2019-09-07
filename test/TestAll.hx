@@ -1,8 +1,8 @@
-import protocol.debug.Types;
-import adapter.DebugSession;
-import testSupport.DebugClient;
+import vscode.debugProtocol.DebugProtocol;
+import vscode.debugAdapter.DebugSession;
+import vscode.debugAdapter.testSupport.DebugClient;
 
-class CustomAdapter extends adapter.DebugSession {
+class CustomAdapter extends DebugSession {
 	public function new() {
 		super();
 

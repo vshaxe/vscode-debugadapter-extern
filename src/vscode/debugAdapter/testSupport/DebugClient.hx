@@ -1,7 +1,7 @@
-package testSupport;
+package vscode.debugAdapter.testSupport;
 
-import protocol.debug.Types;
 import js.lib.Promise;
+import vscode.debugProtocol.DebugProtocol;
 
 @:jsRequire("vscode-debugadapter-testsupport", "DebugClient")
 extern class DebugClient {

@@ -1,4 +1,4 @@
-package adapter;
+package vscode.debugAdapter;
 
 @:jsRequire("vscode-debugadapter", "Handles")
 extern class Handles<T> {

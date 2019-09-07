@@ -1,6 +1,6 @@
-package adapter;
+package vscode.debugAdapter;
 
-import protocol.debug.Types;
+import vscode.debugProtocol.DebugProtocol;
 
 @:jsRequire("vscode-debugadapter", "ProtocolServer")
 extern class ProtocolServer {
