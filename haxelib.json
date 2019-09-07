@@ -7,6 +7,8 @@
 	"releasenote": "Initial release",
 	"classPath": "src",
 	"contributors": ["nadako", "Gama11"],
-	"dependencies": {},
+	"dependencies": {
+		"hxnodejs": ""
+	},
 	"tags": ["extern", "js", "vscode"]
 }

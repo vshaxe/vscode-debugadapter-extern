@@ -5,3 +5,4 @@
 -main TestAll
 -js bin/test.js
 -lib utest
+-lib hxnodejs
