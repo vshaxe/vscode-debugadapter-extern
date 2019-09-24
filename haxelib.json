@@ -4,7 +4,7 @@
 	"url": "https://github.com/vshaxe/vscode-debugadapter-extern",
 	"license": "MIT",
 	"version": "1.37.0",
-	"releasenote": "Initial release",
+	"releasenote": "Update to vscode-debugadapter 1.37",
 	"classPath": "src",
 	"contributors": ["Gama11", "nadako"],
 	"dependencies": {
