@@ -66,6 +66,8 @@ extern class DebugClient {
 	function setBreakpointsRequest(args:SetBreakpointsArguments):Promise<SetBreakpointsResponse>;
 	function setFunctionBreakpointsRequest(args:SetFunctionBreakpointsArguments):Promise<SetFunctionBreakpointsResponse>;
 	function setExceptionBreakpointsRequest(args:SetExceptionBreakpointsArguments):Promise<SetExceptionBreakpointsResponse>;
+	function dataBreakpointInfoRequest(args:DataBreakpointInfoArguments):Promise<DataBreakpointInfoResponse>;
+	function setDataBreakpointsRequest(args:SetDataBreakpointsArguments):Promise<SetDataBreakpointsResponse>;
 	function continueRequest(args:ContinueArguments):Promise<ContinueResponse>;
 	function nextRequest(args:NextArguments):Promise<NextResponse>;
 	function stepInRequest(args:StepInArguments):Promise<StepInResponse>;

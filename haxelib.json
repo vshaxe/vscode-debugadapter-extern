@@ -3,7 +3,7 @@
 	"description": "Visual Studio Code Debug Adapter externs",
 	"url": "https://github.com/vshaxe/vscode-debugadapter-extern",
 	"license": "MIT",
-	"version": "1.36.0",
+	"version": "1.37.0",
 	"releasenote": "Initial release",
 	"classPath": "src",
 	"contributors": ["Gama11", "nadako"],
