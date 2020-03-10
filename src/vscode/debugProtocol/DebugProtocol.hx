@@ -275,6 +275,26 @@ enum abstract OutputEventCategory(String) to String {
 	var Telemetry = "telemetry";
 }
 
+enum abstract OutputEventGroup(String) to String {
+	/**
+		Start a new group in expanded mode. Subsequent output events are members of the group and should be shown indented.
+		The 'output' attribute becomes the name of the group and is not indented.
+	**/
+	var Start = "start";
+
+	/**
+		Start a new group in collapsed mode. Subsequent output events are members of the group and should be shown indented (as soon as the group is expanded).
+		The 'output' attribute becomes the name of the group and is not indented.
+	**/
+	var StartCollapsed = "startCollapsed";
+
+	/**
+		End the current group and decreases the indentation of subsequent output events.
+		A non empty 'output' attribute is shown as the unindented end of the group.
+	**/
+	var End = "end";
+}
+
 typedef TOutputEvent = {
 	/**
 		The output category. If not specified, 'console' is assumed.
@@ -286,6 +306,11 @@ typedef TOutputEvent = {
 		The output to report.
 	**/
 	var output:String;
+
+	/**
+		Support for keeping an output log organized by grouping related messages.
+	**/
+	var ?group:OutputEventGroup;
 
 	/**
 		If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing 'variablesReference' to the 'variables' request.
@@ -2841,7 +2866,21 @@ typedef CompletionItem = {
 		If missing the value 0 is assumed which results in the completion text being inserted.
 	**/
 	var ?length:Int;
-};
+
+	/**
+		Determines the start of the new selection after the text has been inserted (or replaced).
+		The start position must in the range 0 and length of the completion text.
+		If omitted the selection starts at the end of the completion text.
+	**/
+	var ?selectionStart:Int;
+
+	/**
+		Determines the length of the new selection after the text has been inserted (or replaced).
+		The selection can not extend beyond the bounds of the completion text.
+		If omitted the length is assumed to be 0.
+	**/
+	var ?selectionLength:Int;
+}
 
 /**
 	Some predefined types for the CompletionItem. Please note that not all clients have specific icons for all of them.

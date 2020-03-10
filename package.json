@@ -1,7 +1,7 @@
 {
 	"name": "vscode-debugadapter-haxe",
 	"description": "externs for vscode-debugadapter-node",
-	"version": "1.38.0",
+	"version": "1.39.0",
 	"author": "nulldivide@gmail.com",
 	"license": "MIT",
 	"repository": {
@@ -12,9 +12,9 @@
 		"url": "https://github.com/vshaxe/vscode-debugadapter-extern/issues"
 	},
 	"devDependencies": {
-		"vscode-debugprotocol": "^1.38.0",
-		"vscode-debugadapter": "^1.38.0",
-		"vscode-debugadapter-testsupport": "^1.40.1"
+		"vscode-debugprotocol": "^1.39.0",
+		"vscode-debugadapter": "^1.39.1",
+		"vscode-debugadapter-testsupport": "^1.40.2"
 	},
 	"scripts": {
 		"test": "node bin/test.js"
