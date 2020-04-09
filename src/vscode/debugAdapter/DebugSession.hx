@@ -131,6 +131,21 @@ extern class CapabilitiesEvent extends Event<TCapabilitiesEvent> {
 	function new(capabilities:Capabilities):Void;
 }
 
+@:jsRequire("vscode-debugadapter", "ProgressStartEvent")
+extern class ProgressStartEvent extends Event<TProgressStartEvent> {
+	function new(progressId:String, title:String, ?message:String):Void;
+}
+
+@:jsRequire("vscode-debugadapter", "ProgressUpdateEvent")
+extern class ProgressUpdateEvent extends Event<TProgressUpdateEvent> {
+	function new(progressId:String, ?message:String):Void;
+}
+
+@:jsRequire("vscode-debugadapter", "ProgressEndEvent")
+extern class ProgressEndEvent extends Event<TProgressEndEvent> {
+	function new(progressId:String, ?message:String):Void;
+}
+
 enum abstract ErrorDestination(Int) {
 	var User = 1;
 	var Telemetry = 2;
