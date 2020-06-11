@@ -12,9 +12,9 @@
 		"url": "https://github.com/vshaxe/vscode-debugadapter-extern/issues"
 	},
 	"devDependencies": {
-		"vscode-debugprotocol": "^1.40.0",
-		"vscode-debugadapter": "^1.40.0",
-		"vscode-debugadapter-testsupport": "^1.40.3"
+		"vscode-debugprotocol": "^1.41.0",
+		"vscode-debugadapter": "^1.41.0",
+		"vscode-debugadapter-testsupport": "^1.41.0"
 	},
 	"scripts": {
 		"test": "node bin/test.js"

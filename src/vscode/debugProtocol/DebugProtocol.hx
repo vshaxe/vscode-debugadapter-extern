@@ -163,6 +163,7 @@ enum abstract StopReason(String) to String {
 	var Goto = "goto";
 	var FunctionBreakpoint = "function breakpoint";
 	var DataBreakpoint = "data breakpoint";
+	var InstructionBreakpoint = "instruction breakpoint";
 }
 
 typedef TStoppedEvent = {
@@ -204,7 +205,7 @@ typedef TStoppedEvent = {
 /**
 	Event message for 'stopped' event type.
 	The event indicates that the execution of the debuggee has stopped due to some condition.
-	This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
+	This can be caused by a break point previously set, a stepping request has completed, by executing a debugger statement etc.
 **/
 typedef StoppedEvent = Event<TStoppedEvent>;
 
@@ -1109,6 +1110,35 @@ typedef SetDataBreakpointsResponse = Response<{
 }>;
 
 /**
+	SetInstructionBreakpoints request; value of command field is 'setInstructionBreakpoints'.
+	Replaces all existing instruction breakpoints. Typically, instruction breakpoints would be set from a diassembly window.
+	To clear all instruction breakpoints, specify an empty array.
+	When an instruction breakpoint is hit, a 'stopped' event (with reason 'instruction breakpoint') is generated.
+	Clients should only call this request if the capability 'supportsInstructionBreakpoints' is true.
+**/
+typedef SetInstructionBreakpointsRequest = Request<SetInstructionBreakpointsArguments>;
+
+/**
+	Arguments for 'setInstructionBreakpoints' request
+**/
+typedef SetInstructionBreakpointsArguments = {
+	/**
+		The instruction references of the breakpoints
+	**/
+	var breakpoints:Array<InstructionBreakpoint>;
+}
+
+/**
+	Response to 'setInstructionBreakpoints' request
+**/
+typedef SetInstructionBreakpointsResponse = Response<{
+	/**
+		Information about the breakpoints. The array elements correspond to the elements of the 'breakpoints' array.
+	**/
+	var breakpoints:Array<Breakpoint>;
+}>;
+
+/**
 	Continue request; value of command field is 'continue'.
 	The request starts the debuggee to run again.
 **/
@@ -1151,6 +1181,11 @@ typedef NextArguments = {
 		Execute 'next' for this thread.
 	**/
 	var threadId:Int;
+
+	/**
+		Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed.
+	**/
+	var ?granularity:SteppingGranularity;
 }
 
 /**
@@ -1204,6 +1239,11 @@ typedef StepOutArguments = {
 		Execute 'stepOut' for this thread.
 	**/
 	var threadId:Int;
+
+	/**
+		Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed.
+	**/
+	var ?granularity:SteppingGranularity;
 }
 
 /**
@@ -1227,6 +1267,11 @@ typedef StepBackArguments = {
 		Execute 'stepBack' for this thread.
 	**/
 	var threadId:Int;
+
+	/**
+		Optional granularity to step. If no granularity is specified, a granularity of 'statement' is assumed.
+	**/
+	var ?granularity:SteppingGranularity;
 }
 
 /**
@@ -2233,6 +2278,16 @@ typedef Capabilities = {
 		The debug adapter supports the 'clipboard' context value in the 'evaluate' request.
 	**/
 	var ?supportsClipboardContext:Bool;
+
+	/**
+		The debug adapter supports stepping granularities (argument 'granularity') for the stepping requests.
+	**/
+	var ?supportsSteppingGranularity:Bool;
+
+	/**
+		The debug adapter supports adding breakpoints based on instruction references
+	**/
+	var ?supportsInstructionBreakpoints:Bool;
 }
 
 /**
@@ -2917,6 +2972,36 @@ typedef DataBreakpoint = {
 }
 
 /**
+	Properties of a breakpoint passed to the setInstructionBreakpoints request
+**/
+typedef InstructionBreakpoint = {
+	/**
+		The instruction reference of the breakpoint.
+		This should be a memory or instruction pointer reference from an EvaluateResponse, Variable, StackFrame, GotoTarget, or Breakpoint.
+	**/
+	var instructionReference:String;
+
+	/**
+		An optional offset from the instruction reference.
+		This can be negative.
+	**/
+	var ?offset:Int;
+
+	/**
+		An optional expression for conditional breakpoints.
+		It is only honored by a debug adapter if the capability 'supportsConditionalBreakpoints' is true.
+	**/
+	var ?condition:String;
+
+	/**
+		An optional expression that controls how many hits of the breakpoint are ignored.
+		The backend is expected to interpret the expression as needed.
+		The attribute is only honored by a debug adapter if the capability 'supportsHitConditionalBreakpoints' is true.
+	**/
+	var ?hitCondition:String;
+}
+
+/**
 	Information about a Breakpoint created in setBreakpoints or setFunctionBreakpoints.
 **/
 typedef Breakpoint = {
@@ -2961,6 +3046,31 @@ typedef Breakpoint = {
 		If no end line is given, then the end column is assumed to be in the start line.
 	**/
 	var ?endColumn:Int;
+
+	/**
+		An optional memory reference to where the breakpoint is set.
+	**/
+	var ?instructionReference:String;
+
+	/**
+		An optional offset from the instruction reference.
+		This can be negative.
+	**/
+	var ?offset:Int;
+}
+
+/**
+	The granularity of one 'step' in the stepping requests 'next', 'stepIn', 'stepOut', and 'stepBack'.
+	'statement': The step should allow the program to run until the current statement has finished executing.
+	The meaning of a statement is determined by the adapter and it may be considered equivalent to a line.
+	For example 'for(int i = 0; i < 10; i++) could be considered to have 3 statements 'int i = 0', 'i < 10', and 'i++'.
+	'line': The step should allow the program to run until the current source line has executed.
+	'instruction': The step should allow one instruction to execute (e.g. one x86 instruction).
+**/
+enum abstract SteppingGranularity(String) from String {
+	var Statement = "statement";
+	var Line = "line";
+	var Instruction = "instruction";
 }
 
 /**

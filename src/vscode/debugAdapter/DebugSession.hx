@@ -201,6 +201,9 @@ extern class DebugSession extends ProtocolServer {
 	private function setDataBreakpointsRequest(response:SetDataBreakpointsResponse, args:SetDataBreakpointsArguments):Void;
 	private function readMemoryRequest(response:ReadMemoryResponse, args:ReadMemoryArguments):Void;
 	private function disassembleRequest(response:DisassembleResponse, args:DisassembleArguments):Void;
+	private function cancelRequest(response:CancelResponse, args:CancelArguments):Void;
+	private function breakpointLocationsRequest(response:BreakpointLocationsResponse, args:BreakpointLocationsArguments):Void;
+	private function setInstructionBreakpointsRequest(response:SetInstructionBreakpointsResponse, args:SetInstructionBreakpointsArguments):Void;
 	private function customRequest<T>(command:String, response:Response<T>, args:Dynamic):Void;
 	private function convertClientLineToDebugger(line:Int):Int;
 	private function convertDebuggerLineToClient(line:Int):Int;
